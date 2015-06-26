@@ -1,6 +1,6 @@
 /**
- * Created by mmorales on 5/19/15.
- * Jquery plugin to remove items out of the over sized forms in new jersey
+ * Created by mmorales on 6/26/15.
+ * Jquery plugin
  */
 (function ($) {
 
