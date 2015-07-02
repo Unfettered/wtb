@@ -244,7 +244,28 @@
 			}
     	}
 
+		/**
+    	* randomly picks a caster from a faction that is available
+    	* @param string faction name the faction
+    	* @return object
+    	*/
+    	$.wtb.pullCasterForFaction = function (faction){
+   			var casters = $.wtb.getFactionsAvailableCasters(faction);
+            var selection = Math.floor((Math.random() * casters.length));
+            var caster = casters[selection];
+            var angle = 360/casters.length * selection;
+            return {'caster':caster,'angle':angle,'position':selection};
+    	}
 
+		/**
+        * animate faction roulette
+        * @param string faction name the faction
+        * @param integer degrees how far to rotate
+        */
+        $.wtb.pullCasterForFaction = function (faction, degrees){
+            var roulette = $('.wtb-roulette.'+faction);
+            $('.Menoth.wtb-roulette').attr('style', '-webkit-animation-name: x-spin;-webkit-animation-duration: 4s;');
+        }
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
 	 */
