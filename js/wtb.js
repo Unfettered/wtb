@@ -8,7 +8,7 @@
 	//The location the widget will be drawn in the dom
 	$.wtb.target = null;
 	//The location the images are stored
-    $.wtb.imagePath = '/images/';
+    $.wtb.imagePath = '/images';
 	//Additional Options
 	$.wtb.advancedOptions = {};
 	//player list for the Tourney
@@ -47,8 +47,22 @@
         this.name = "";//casters name
         this.faction = "";//faction name
         this.claimed = 0;//has someone claimed them
-        this.getImagePath(){
-            return $.wtb.imagePath+'/'+this.faction+'/'+this.name+'.png';
+
+        /**
+         * Gets this casters image path
+         * @return string path the the casters image
+        */
+        this.getImagePath = function(){
+            return $.wtb.imagePath+'/'+this.faction.toLowerCase()+'/'+this.name+'.png';
+        }
+
+        /**
+         * Creates a jquery object for a dom element image
+         * @return $(DOM) image of caster
+        */
+        this.getImage = function(){
+            var image = $('<img src="'+this.getImagePath()+'">');
+            return image;
         }
     }
 
@@ -64,6 +78,12 @@
         $.wtb.factions[faction][casterName] =caster;
     }
 
+	/**
+	* Add a player to the tournement
+	* @param string name name of the player
+	* @param string faction name of the players faction
+	* @return Player() player object added
+	*/
 	$.wtb.addPlayer = function (name, faction) {
         var player = new $.wtb.player;
         player.faction = faction;
@@ -72,8 +92,22 @@
         return player;
     }
 
+	/**
+    	* get all players in the tournament
+    	* @return Array[Player()]
+    	*/
 	$.wtb.getPlayers = function(){
 		return $.wtb.players;
+	}
+
+	/**
+	* get a faction's logo image
+	* @param string faction name the faction
+	*/
+	$.wtb.getFactionLogo = function(faction){
+		var src = $.wtb.imagePath+'/'+faction.toLowerCase()+'.png';
+        var image = $('<img src="'+src+'">');
+        return image;
 	}
 
 	$.wtb.getFactions = function(exclude){
@@ -123,6 +157,41 @@
             }
         }
 	}
+
+	/**
+	* Creates a header bar with all of the factions logos
+	*/
+	$.wtb.buildFactionHeader = function (){
+		var factions = $.wtb.getFactions();
+		var header = $("<div class='wtb-header'>");
+		for (var i in factions) {
+			var faction = factions[i];
+			var panel = $('<div class="wtb-panel">');
+			panel.addClass(faction);
+			panel.append($.wtb.getFactionLogo(faction));
+			header.append(panel);
+		}
+		$.wtb.target.append(header);
+	}
+		/**
+    	* Creates a header bar with all of the factions logos
+    	*/
+    	$.wtb.buildRouletteContainer = function (){
+    		var factions = $.wtb.getFactions();
+    		var container = $("<div class='wtb-roulette-container'>");
+    		for (var i in factions) {
+    			var faction = factions[i];
+    			var roulette = $('<div class="wtb-roulette">');
+    			roulette.addClass(faction);
+    			var casters = $.wtb.getFactionsCasters(faction);
+    			for(casterName in casters){
+    			    var caster = casters[casterName];
+    			    roulette.append(caster.getImage());
+				}
+				container.append(roulette);
+    		}
+    		$.wtb.target.append(container);
+    	}
 
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
@@ -309,7 +378,8 @@
         $.wtb.addCaster("Aiakos, Scourge of the Meredius","Bankrupt");
         $.wtb.addCaster("Elara, Tyro of the Third Chamber","Bankrupt");
         $.wtb.addCaster("Gastone Crosse","Bankrupt");
-		
+		$.wtb.buildFactionHeader();
+		$.wtb.buildRouletteContainer();
 	};
 
 })(jQuery);
