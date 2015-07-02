@@ -65,7 +65,7 @@
 	-webkit-perspective: 0;
 }
 .wtb-rotate{
-	padding-top: 180px;
+	padding-top: 210px;
 	/* Ensure that we're in 3D space */
 	margin: 0 auto;
 	width: 1250px;
@@ -89,18 +89,19 @@
 }
 .wtb-roulette{
 	margin: 0 auto;
-	height: 110px;
+	height: 90px;
 	width: 90px;
 	float:left;
 	-webkit-transform-style: preserve-3d;
-	-webkit-animation-iteration-count: infinite;
+	/*-webkit-animation-iteration-count: infinite;*/
 	-webkit-animation-timing-function: ease-out;
 }
-.wtb-roulette{
+.wtb-roulette.Cygnar{
 	-webkit-animation-name: x-spin;
 	-webkit-animation-duration: 4s;
-}
+	-webkit-animation-iteration-count: infinite;
 
+}
 @-webkit-keyframes x-spin {
 	0%    { -webkit-transform: rotateX(360deg);}
 	50%   { -webkit-transform: rotateX(180deg); }

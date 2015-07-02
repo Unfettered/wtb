@@ -29,7 +29,8 @@
 		'Minions': {},
 		'Bankrupt':{}
 	};
-
+	//defined z index for the roulette;
+	$.wtb.translateZ='250px';
 	/**
 	 * Player Object Declaration
 	*/
@@ -161,6 +162,9 @@
 		player.caster = caster;
 	}
 
+	/**
+	* clears all references to claimed casters
+	*/
 	$.wtb.clearClaimed = function (caster, player){
 		for (var i in $.wtb.players) {
 			player = $.wtb.players[i];
@@ -190,17 +194,19 @@
 		$.wtb.target.append(header);
 	}
 		/**
-    	* Creates a header bar with all of the factions logos
+    	* Creates a roulette container for each faction
     	*/
     	$.wtb.buildRouletteContainer = function (){
     		var factions = $.wtb.getFactions();
     		var outerContainer = $("<div class='wtb-roulette-container'>");
+    		$.wtb.target.append(outerContainer);
     		var container = $("<div class='wtb-rotate'>");
     		outerContainer.append(container);
     		for (var i in factions) {
     			var faction = factions[i];
     			var roulette = $('<div class="wtb-roulette">');
     			roulette.addClass(faction);
+    			/*
     			var casters = $.wtb.getFactionsAvailableCasters(faction);
     			var casterCounter = 0;
     			var angle = 360/casters.length;
@@ -212,10 +218,32 @@
     			    roulette.append(imageContainer);
     			    casterCounter++;
 				}
+				*/
 				container.append(roulette);
+				$.wtb.populateFactionRoulette(faction);
     		}
-    		$.wtb.target.append(outerContainer);
     	}
+
+		/**
+    	* Populates a roulette bar with available casters
+    	* @param string faction name the faction
+    	*/
+    	$.wtb.populateFactionRoulette = function (faction){
+    	    var roulette = $('.wtb-roulette.'+faction);
+    	    roulette.html('');
+   			var casters = $.wtb.getFactionsAvailableCasters(faction);
+            var casterCounter = 0;
+            var angle = 360/casters.length;
+            for(casterName in casters){
+                var caster = casters[casterName];
+                var imageContainer = $('<div class="wtb-caster-container">');
+				imageContainer.attr('style',"-webkit-transform: rotateX("+casterCounter*angle+"deg) translateZ("+$.wtb.translateZ+");");
+				imageContainer.append(caster.getImage())
+                roulette.append(imageContainer);
+                casterCounter++;
+			}
+    	}
+
 
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
