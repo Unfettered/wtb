@@ -7,6 +7,8 @@
 	$.wtb = {};
 	//The location the widget will be drawn in the dom
 	$.wtb.target = null;
+	//The location the images are stored
+    $.wtb.imagePath = '/images/';
 	//Additional Options
 	$.wtb.advancedOptions = {};
 	//player list for the Tourney
@@ -45,6 +47,9 @@
         this.name = "";//casters name
         this.faction = "";//faction name
         this.claimed = 0;//has someone claimed them
+        this.getImagePath(){
+            return $.wtb.imagePath+'/'+this.faction+'/'+this.name+'.png';
+        }
     }
 
 	/**
@@ -99,6 +104,9 @@
     }
 
 	$.wtb.claimCaster = function (caster, player){
+		if(player.caster){
+			player.caster.claimed = 0;
+		}
 		$.wtb.factions[caster.faction][caster.name].claimed = 1;
 		player.caster = caster;
 	}
