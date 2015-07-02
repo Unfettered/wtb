@@ -262,9 +262,9 @@
         * @param string faction name the faction
         * @param integer degrees how far to rotate
         */
-        $.wtb.pullCasterForFaction = function (faction, degrees){
+        $.wtb.spinFactionsRoulette = function (faction, degrees){
             var roulette = $('.wtb-roulette.'+faction);
-            $('.Menoth.wtb-roulette').attr('style', '-webkit-animation-name: x-spin;-webkit-animation-duration: 4s;');
+            roulette.attr('style', '-webkit-animation-name: x-spin;-webkit-animation-duration: 8s;');
         }
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
