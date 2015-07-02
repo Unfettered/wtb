@@ -1,379 +1,307 @@
 /**
  * Created by mmorales on 6/26/15.
- * Jquery plugin
+ * Jquery plugin to handle who's the boss events
  */
 (function ($) {
-
+	//Model Declaration in the jQuery NameSpace
 	$.wtb = {};
+	//The location the widget will be drawn in the dom
 	$.wtb.target = null;
+	//Additional Options
 	$.wtb.advancedOptions = {};
-	$.wtb.players = {};
+	//player list for the Tourney
+	$.wtb.players = new Array();
+	//factions available to play
 	$.wtb.factions = {
-		'Cygnar': {
-            {name:'Artificer General Nemo & Storm Chaser Adept Caitlin Finch',claimed:0},
-            {name:'Captain Allister Caine',claimed:0},
-            {name:'Captain E. Dominic Darius & Halfjacks',claimed:0},
-            {name:'Captain Jeremiah Kraye',claimed:0},
-            {name:'Captain Kara Sloan',claimed:0},
-            {name:'Captain Victoria Haley',claimed:0},
-            {name:'Commander Adept Nemo',claimed:0},
-            {name:'Commander Coleman Stryker',claimed:0},
-            {name:'Constance Blaize, Knight of the Prophet',claimed:0},
-            {name:'General Adept Nemo',claimed:0},
-            {name:'Lieutenant Allister Caine',claimed:0},
-            {name:'Lord Commander Stryker',claimed:0},
-            {name:'Lord General Coleman Stryker',claimed:0},
-            {name:"Major Markus 'Siege' Brisbane",claimed:0},
-            {name:'Major Prime Victoria Haley',claimed:0},
-            {name:'Major Victoria Haley',claimed:0},
-		},
-		'Menoth': {
-            {name:'Anson Durst, Rock of the Faith',claimed:0},
-            {name:'Feora, Priestess of the Flame',claimed:0},
-            {name:'Feora, Protector of the Flame',claimed:0},
-            {name:'Grand Exemplar Kreoss',claimed:0},
-            {name:'Grand Scrutator Severius',claimed:0},
-            {name:'Hierarch Severius',claimed:0},
-            {name:'High Allegiant Amon Ad-Raza',claimed:0},
-            {name:'High Executioner Servath Reznik',claimed:0},
-            {name:'High Exemplar Kreoss',claimed:0},
-            {name:'Intercessor Kreoss',claimed:0},
-            {name:'Servath Reznik, Wrath of Ages',claimed:0},
-            {name:'Testament of Menoth',claimed:0},
-            {name:'The Harbinger of Menoth',claimed:0},
-            {name:'The High Reclaimer',claimed:0},
-            {name:'Thyra, Flame of Sorrow',claimed:0},
-            {name:'Vice Scrutator Vindictus',claimed:0},
-		},
-		'Khador': {
-            {name:'Forward Kommander Sorscha Kratikoff',claimed:0},
-            {name:'Karchev the Terrible',claimed:0},
-            {name:'Koldun Kommander Aleksandra Zerkova',claimed:0},
-            {name:'Koldun Kommander Zerkova',claimed:0},
-            {name:'Kommandant Irusk',claimed:0},
-            {name:'Kommander Harkevich',claimed:0},
-            {name:'Kommander Orsus Zoktavir',claimed:0},
-            {name:'Kommander Sorscha',claimed:0},
-            {name:'Kommander Strakhov',claimed:0},
-            {name:'Kommander Zoktavir, The Butcher Unleashed',claimed:0},
-            {name:'Obavnik Kommander Zerkova & Reaver Guard',claimed:0},
-            {name:'Old Witch of Khador & Scrapjack',claimed:0},
-            {name:'Supreme Kommandant Irusk',claimed:0},
-            {name:'The Butcher of Khardov',claimed:0},
-            {name:'Vladimir Tzepesci, Great Prince of Umbrey',claimed:0},
-            {name:'Vladimir, the Dark Champion',claimed:0},
-            {name:'Vladimir, the Dark Prince',claimed:0},
-		},
-		'Cryx': {
-            {name:'Iron Lich Asphyxious',claimed:0},
-            {name:'Asphyxious the Hellbringer & Vociferon',claimed:0},
-            {name:'Goreshade the Bastard & Deathwalker',claimed:0},
-            {name:'Goreshade the Cursed',claimed:0},
-            {name:'Goreshade, Lord of Ruin',claimed:0},
-            {name:'Lich Lord Asphyxious',claimed:0},
-            {name:'Lich Lord Venethrax',claimed:0},
-            {name:'Lord Exhumator Scaverous',claimed:0},
-            {name:'Pirate Queen Skarre',claimed:0},
-            {name:'Skarre, Queen of the Broken Coast',claimed:0},
-            {name:'Warwitch Deneghra',claimed:0},
-            {name:'Witch Coven of Garlghast & the Egregore',claimed:0},
-            {name:'Wraith Witch Deneghra',claimed:0}
-		},
-		'Retribution': {
-			{name:'Adeptis Rahn',claimed:0},
-            {name:'Dawnlord Vyros',claimed:0},
-            {name:'Garryth, Blade of Retribution',claimed:0},
-            {name:'Issyria, Sibyl of Dawn',claimed:0},
-            {name:"Kaelyssa, Night's Whisper",claimed:0},
-            {name:'Lord Arcanist Ossyan',claimed:0},
-            {name:'Ravyn, Eternal Light',claimed:0},
-            {name:'Vyros, Incissar of the Dawnguard',claimed:0},
-		},
-		'Mercenaries': {
-			{name:"Ashlynn D'Elyse",claimed:0},
-			{name:'Captain Bartolo Montador',claimed:0},
-			{name:'Captain Damiano',claimed:0},
-			{name:'Captain Phinneus Shae',claimed:0},
-			{name:'Drake MacBain',claimed:0},
-			{name:'Durgen Madhammer',claimed:0},
-			{name:'Exulon Thexus',claimed:0},
-			{name:'Fiona the Black',claimed:0},
-			{name:'General Ossrum',claimed:0},
-			{name:'Gorten Grundback',claimed:0},
-		},
-		'Convergence': {
-			{name:'Aurora, Numen of Aerogenesis',claimed:0},
-			{name:'Axis, The Harmonic Enforcer',claimed:0},
-			{name:'Father Lucant, Divinity Architect',claimed:0},
-			{name:'Iron Mother Directrix & Exponent Servitors',claimed:0},
-		},
-		'Trollbloods': {
-			{name:'Borka Kegslayer',claimed:0},
-			{name:'Borka, Vengeance of the Rimeshaws',claimed:0},
-			{name:'Calandra Truthsayer, Oracle of the Glimmerwood',claimed:0},
-			{name:'Captain Gunnbjorn',claimed:0},
-			{name:'Grim Angus',claimed:0},
-			{name:'Grissel Bloodsong',claimed:0},
-			{name:'Grissel Bloodsong, Marshal of the Kriels',claimed:0},
-			{name:'Hoarluk Doomshaper',claimed:0},
-			{name:'Hoarluk Doomshaper, Rage of Dhunia',claimed:0},
-			{name:'Hunters Grim',claimed:0},
-			{name:'Jarl Skuld, Devil of the Thornwood',claimed:0},
-			{name:'Madrak Ironhide',claimed:0},
-			{name:'Madrak Ironhide, World Ender',claimed:0}
-		},
-		'Circle': {
-			{name:'Baldur the Stonecleaver',claimed:0},
-            {name:'Baldur the Stonesoul',claimed:0},
-            {name:'Bradigus Thorle the Runecarver',claimed:0},
-            {name:'Cassius the Oathkeeper & Wurmwood, Tree of Fate',claimed:0},
-            {name:'Grayle the Farstrider',claimed:0},
-            {name:'Kaya the Moonhunter & Laris',claimed:0},
-            {name:'Kaya the Wildborne',claimed:0},
-            {name:'Kromac the Ravenous',claimed:0},
-            {name:'Krueger the Stormlord',claimed:0},
-            {name:'Krueger the Stormwrath',claimed:0},
-            {name:'Mohsar the Desertwalker',claimed:0},
-            {name:'Morvahna The Autumnblade',claimed:0},
-            {name:'Morvahna the Dawnshadow',claimed:0}
-		},
-		'Skorne': {
-			{name:'Master Ascetic Naaresh',claimed:0},
-            {name:'Archdomina Makeda',claimed:0},
-            {name:'Dominar Rasheth',claimed:0},
-            {name:'Lord Arbiter Hexeris',claimed:0},
-            {name:'Lord Assassin Morghoul',claimed:0},
-            {name:'Lord Tyrant Hexeris',claimed:0},
-            {name:'Makeda & The Exalted Court',claimed:0},
-            {name:'Master Tormentor Morghoul',claimed:0},
-            {name:'Supreme Aptimus Zaal & Kovaas',claimed:0},
-            {name:'Supreme Archdomina Makeda',claimed:0},
-            {name:'Tyrant Xerxis',claimed:0},
-            {name:'Void Seer Mordikaar',claimed:0},
-            {name:'Xerxis, Fury of Halaak',claimed:0}
-            {name:'Zaal, the Ancestral Advocate',claimed:0}
-		},
-		'Legion': {
-			{name:'Absylonia, Daughter of Everblight',claimed:0},
-            {name:'Absylonia, Terror of Everblight',claimed:0},
-            {name:'Bethayne and Belphagor',claimed:0},
-            {name:'Kallus, Wrath of Everblight',claimed:0},
-            {name:'Lylyth, Herald of Everblight',claimed:0},
-            {name:'Lylyth, Reckoning of Everblight',claimed:0},
-            {name:'Lylyth, Shadow of Everblight',claimed:0},
-            {name:'Rhyas, Sigil of Everblight',claimed:0},
-            {name:'Saeryn, Omen of Everblight',claimed:0},
-            {name:'Thagrosh the Messiah',claimed:0},
-            {name:'Thagrosh, Prophet of Everblight',claimed:0},
-            {name:'Vayl, Consul of Everblight',claimed:0},
-            {name:'Vayl, Disciple of Everblight',claimed:0}
-		},
-		'Minions': {
-		    {name:'Bloody Barnabas',claimed:0},
-		    {name:'Calaban the Grave Walker',claimed:0},
-		    {name:'Dr. Arkadius',claimed:0},
-		    {name:'Helga the Conquerer',claimed:0},
-		    {name:'Jaga-Jaga, the Death Charmer',claimed:0},
-		    {name:'Lord Carver, BMMD, Esq. III',claimed:0},
-		    {name:'Maelok the Dreadbound',claimed:0},
-		    {name:'Midas',claimed:0},
-		    {name:'Rask',claimed:0},
-   		    {name:'Sturm & Drang',claimed:0},
-		}
-		'Bankrupt':{
-		    {name:'Brun Cragback & Lug',claimed:0},
-	        {name:'Dahlia Hallyr & Skarath',claimed:0},
-	        {name:'Rorsh & Brine',claimed:0},
-	        {name:'Wrong Eye & Snapjaw',claimed:0},
-	        {name:'Beast Mistress',claimed:0},
-	        {name:'Tyrant Zaadesh',claimed:0},
-	        {name:'Una the Falconer',claimed:0},
-	        {name:'Horgle Ironstrike',claimed:0},
-	        {name:'Journeyman Warcaster',claimed:0},
-	        {name:'Lieutenant Allison Jakes',claimed:0},
-	        {name:'Initiate Tristan Durant',claimed:0},
-	        {name:'Kovnik Andrei Malakov',claimed:0},
-	        {name:'Aiakos, Scourge of the Meredius',claimed:0},
-	        {name:'Elara, Tyro of the Third Chamber',claimed:0},
-	        {name:'Gastone Crosse',claimed:0}
-		}
+		'Cygnar': {},
+		'Menoth': {},
+		'Khador': {},
+		'Cryx': {},
+		'Retribution': {},
+		'Mercenaries': {},
+		'Convergence': {},
+		'Trollbloods': {},
+		'Circle': {},
+		'Skorne': {},
+		'Legion': {},
+		'Minions': {},
+		'Bankrupt':{}
 	};
 
+	/**
+	 * Player Object Declaration
+	*/
+	$.wtb.player = function () {
+        this.name = "";//player name
+        this.faction = "";//faction name they play
+        this.caster = null;//the caster currently given to them
+        this.previousCasters = [];
+	}
+
+	/**
+	 * Caster Object Declaration
+	*/
+	$.wtb.caster = function () {
+        this.name = "";//casters name
+        this.faction = "";//faction name
+        this.claimed = 0;//has someone claimed them
+    }
+
+	/**
+	* Add a caster to a faction
+	* @param string casterName name of the caster
+	* @param string faction name of the caster's faction
+	*/
+    $.wtb.addCaster = function (casterName,faction){
+        var caster = new $.wtb.caster;
+        caster.faction = faction;
+        caster.name = casterName;
+        $.wtb.factions[faction][casterName] =caster;
+    }
+
+	$.wtb.addPlayer = function (name, faction) {
+        var player = new $.wtb.player;
+        player.faction = faction;
+        player.name = name;
+        $.wtb.players.push(player);
+        return player;
+    }
+
+	$.wtb.getPlayers = function(){
+		return $.wtb.players;
+	}
+
+	$.wtb.getFactions = function(exclude){
+		exclude = exclude || null;
+		var factions = [];
+		for (var faction in $.wtb.factions) {
+            if ($.wtb.factions.hasOwnProperty(faction) && faction != exclude) {
+                factions.push(faction);
+            }
+        }
+        return factions;
+	}
+
+	$.wtb.getFactionsCasters = function (faction){
+		return $.wtb.factions[faction];
+	}
+
+	$.wtb.getFactionsAvailableCasters = function (faction){
+        var casters = $.wtb.getFactionsCasters(faction);
+        var available = [];
+		for (var casterName in casters) {
+			caster = casters[casterName];
+			if(caster.claimed == 0){
+				available.push(caster);
+			}
+		}
+		return available;
+    }
+
+	$.wtb.claimCaster = function (caster, player){
+		$.wtb.factions[caster.faction][caster.name].claimed = 1;
+		player.caster = caster;
+	}
+
+	$.wtb.clearClaimed = function (caster, player){
+		for (var i in $.wtb.players) {
+			player = $.wtb.players[i];
+			player.caster = null;
+		}
+		for (var faction in $.wtb.factions) {
+            var casters = $.wtb.factions[faction];
+            for (var casterName in casters) {
+                $.wtb.factions[faction][casterName].claimed = 0;
+            }
+        }
+	}
 
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
 	 */
 	$.fn.wtb = function () {
 		$.wtb.target = $(this);
-		var formID = form.attr('id');
-
-		if ($.wtb.form[formID]) {
-			$.each($.wtb.formHeaders['frmSearch'], function (sectionID, header) {
-				header = $(header);
-				if (header.attr('child-hidden') == 'true') {
-					$.wtb.enableSubForm(formID,sectionID);
-				}
-				header.removeAttr('child-hidden');
-				header.removeAttr('child-id');
-				header.off();
-				header.find('.CTRL_TYPE_DIVLINK').attr('onmousedown', "DivToggle('" + sectionID + "');");
-			});
-			delete($.wtb.form[formID]);
-			return;
+		var id = $(this).attr('id');
+		if (!id){
+			id = 'wtb-container';
+			$(this).attr('id', id);
 		}
-
-		$.wtb.form[formID] = form;
-		$.wtb.advancedOptions[formID] = form.find('#advanced_options');
-		$.wtb.formSections[formID] = {};
-		$.wtb.formHeaders[formID] = {};
-		$.wtb.advancedOptions[formID].find('.CTRL_TYPE_DIV').each(function (index, element) {
-			var header = $(element);
-			$.wtb.addFormSection(formID, header);
-			$.wtb.bindHeaderClick(formID, header.attr('child-id'));
-		});
+		//Cygnar
+		$.wtb.addCaster("Artificer General Nemo & Storm Chaser Adept Caitlin Finch","Cygnar");
+        $.wtb.addCaster("Captain Allister Caine","Cygnar");
+        $.wtb.addCaster("Captain E. Dominic Darius & Halfjacks","Cygnar");
+        $.wtb.addCaster("Captain Jeremiah Kraye","Cygnar");
+        $.wtb.addCaster("Captain Kara Sloan","Cygnar");
+        $.wtb.addCaster("Captain Victoria Haley","Cygnar");
+        $.wtb.addCaster("Commander Adept Nemo","Cygnar");
+        $.wtb.addCaster("Commander Coleman Stryker","Cygnar");
+        $.wtb.addCaster("Constance Blaize, Knight of the Prophet","Cygnar");
+        $.wtb.addCaster("General Adept Nemo","Cygnar");
+        $.wtb.addCaster("Lieutenant Allister Caine","Cygnar");
+        $.wtb.addCaster("Lord Commander Stryker","Cygnar");
+        $.wtb.addCaster("Lord General Coleman Stryker","Cygnar");
+        $.wtb.addCaster("Major Markus 'Siege' Brisbane","Cygnar");
+        $.wtb.addCaster("Major Prime Victoria Haley","Cygnar");
+        $.wtb.addCaster("Major Victoria Haley","Cygnar");
+		//Menoth
+		$.wtb.addCaster("Anson Durst, Rock of the Faith","Menoth");
+        $.wtb.addCaster("Feora, Priestess of the Flame","Menoth");
+        $.wtb.addCaster("Feora, Protector of the Flame","Menoth");
+        $.wtb.addCaster("Grand Exemplar Kreoss","Menoth");
+        $.wtb.addCaster("Grand Scrutator Severius","Menoth");
+        $.wtb.addCaster("Hierarch Severius","Menoth");
+        $.wtb.addCaster("High Allegiant Amon Ad-Raza","Menoth");
+        $.wtb.addCaster("High Executioner Servath Reznik","Menoth");
+        $.wtb.addCaster("High Exemplar Kreoss","Menoth");
+        $.wtb.addCaster("Intercessor Kreoss","Menoth");
+        $.wtb.addCaster("Servath Reznik, Wrath of Ages","Menoth");
+        $.wtb.addCaster("Testament of Menoth","Menoth");
+        $.wtb.addCaster("The Harbinger of Menoth","Menoth");
+        $.wtb.addCaster("The High Reclaimer","Menoth");
+        $.wtb.addCaster("Thyra, Flame of Sorrow","Menoth");
+        $.wtb.addCaster("Vice Scrutator Vindictus","Menoth");
+		//Khador
+		$.wtb.addCaster("Forward Kommander Sorscha Kratikoff","Khador");
+        $.wtb.addCaster("Karchev the Terrible","Khador");
+        $.wtb.addCaster("Koldun Kommander Aleksandra Zerkova","Khador");
+        $.wtb.addCaster("Koldun Kommander Zerkova","Khador");
+        $.wtb.addCaster("Kommandant Irusk","Khador");
+        $.wtb.addCaster("Kommander Harkevich","Khador");
+        $.wtb.addCaster("Kommander Orsus Zoktavir","Khador");
+        $.wtb.addCaster("Kommander Sorscha","Khador");
+        $.wtb.addCaster("Kommander Strakhov","Khador");
+        $.wtb.addCaster("Kommander Zoktavir, The Butcher Unleashed","Khador");
+        $.wtb.addCaster("Obavnik Kommander Zerkova & Reaver Guard","Khador");
+        $.wtb.addCaster("Old Witch of Khador & Scrapjack","Khador");
+        $.wtb.addCaster("Supreme Kommandant Irusk","Khador");
+        $.wtb.addCaster("The Butcher of Khardov","Khador");
+        $.wtb.addCaster("Vladimir Tzepesci, Great Prince of Umbrey","Khador");
+        $.wtb.addCaster("Vladimir, the Dark Champion","Khador");
+        $.wtb.addCaster("Vladimir, the Dark Prince","Khador");
+		//Cryx
+		$.wtb.addCaster("Iron Lich Asphyxious","Cryx");
+        $.wtb.addCaster("Asphyxious the Hellbringer & Vociferon","Cryx");
+        $.wtb.addCaster("Goreshade the Bastard & Deathwalker","Cryx");
+        $.wtb.addCaster("Goreshade the Cursed","Cryx");
+        $.wtb.addCaster("Goreshade, Lord of Ruin","Cryx");
+        $.wtb.addCaster("Lich Lord Asphyxious","Cryx");
+        $.wtb.addCaster("Lich Lord Venethrax","Cryx");
+        $.wtb.addCaster("Lord Exhumator Scaverous","Cryx");
+        $.wtb.addCaster("Pirate Queen Skarre","Cryx");
+        $.wtb.addCaster("Skarre, Queen of the Broken Coast","Cryx");
+        $.wtb.addCaster("Warwitch Deneghra","Cryx");
+        $.wtb.addCaster("Witch Coven of Garlghast & the Egregore","Cryx");
+        $.wtb.addCaster("Wraith Witch Deneghra","Cryx");
+		//Retribution
+		$.wtb.addCaster("Adeptis Rahn","Retribution");
+        $.wtb.addCaster("Dawnlord Vyros","Retribution");
+        $.wtb.addCaster("Garryth, Blade of Retribution","Retribution");
+        $.wtb.addCaster("Issyria, Sibyl of Dawn","Retribution");
+        $.wtb.addCaster("Kaelyssa, Night's Whisper","Retribution");
+        $.wtb.addCaster("Lord Arcanist Ossyan","Retribution");
+        $.wtb.addCaster("Ravyn, Eternal Light","Retribution");
+        $.wtb.addCaster("Vyros, Incissar of the Dawnguard","Retribution");
+		//Mercenaries
+		$.wtb.addCaster("Ashlynn D'Elyse","Mercenaries");
+        $.wtb.addCaster("Captain Bartolo Montador","Mercenaries");
+        $.wtb.addCaster("Captain Damiano","Mercenaries");
+        $.wtb.addCaster("Captain Phinneus Shae","Mercenaries");
+        $.wtb.addCaster("Drake MacBain","Mercenaries");
+        $.wtb.addCaster("Durgen Madhammer","Mercenaries");
+        $.wtb.addCaster("Exulon Thexus","Mercenaries");
+        $.wtb.addCaster("Fiona the Black","Mercenaries");
+        $.wtb.addCaster("General Ossrum","Mercenaries");
+        $.wtb.addCaster("Gorten Grundback","Mercenaries");
+		//Convergence
+		$.wtb.addCaster("Aurora, Numen of Aerogenesis","Convergence");
+        $.wtb.addCaster("Axis, The Harmonic Enforcer","Convergence");
+        $.wtb.addCaster("Father Lucant, Divinity Architect","Convergence");
+        $.wtb.addCaster("Iron Mother Directrix & Exponent Servitors","Convergence");
+		//Trollbloods
+		$.wtb.addCaster("Borka Kegslayer","Trollbloods");
+        $.wtb.addCaster("Borka, Vengeance of the Rimeshaws","Trollbloods");
+        $.wtb.addCaster("Calandra Truthsayer, Oracle of the Glimmerwood","Trollbloods");
+        $.wtb.addCaster("Captain Gunnbjorn","Trollbloods");
+        $.wtb.addCaster("Grim Angus","Trollbloods");
+        $.wtb.addCaster("Grissel Bloodsong","Trollbloods");
+        $.wtb.addCaster("Grissel Bloodsong, Marshal of the Kriels","Trollbloods");
+        $.wtb.addCaster("Hoarluk Doomshaper","Trollbloods");
+        $.wtb.addCaster("Hoarluk Doomshaper, Rage of Dhunia","Trollbloods");
+        $.wtb.addCaster("Hunters Grim","Trollbloods");
+        $.wtb.addCaster("Jarl Skuld, Devil of the Thornwood","Trollbloods");
+        $.wtb.addCaster("Madrak Ironhide","Trollbloods");
+        $.wtb.addCaster("Madrak Ironhide, World Ender","Trollbloods");
+		//Circle
+		$.wtb.addCaster("Baldur the Stonecleaver","Circle");
+        $.wtb.addCaster("Baldur the Stonesoul","Circle");
+        $.wtb.addCaster("Bradigus Thorle the Runecarver","Circle");
+        $.wtb.addCaster("Cassius the Oathkeeper & Wurmwood, Tree of Fate","Circle");
+        $.wtb.addCaster("Grayle the Farstrider","Circle");
+        $.wtb.addCaster("Kaya the Moonhunter & Laris","Circle");
+        $.wtb.addCaster("Kaya the Wildborne","Circle");
+        $.wtb.addCaster("Kromac the Ravenous","Circle");
+        $.wtb.addCaster("Krueger the Stormlord","Circle");
+        $.wtb.addCaster("Krueger the Stormwrath","Circle");
+        $.wtb.addCaster("Mohsar the Desertwalker","Circle");
+        $.wtb.addCaster("Morvahna The Autumnblade","Circle");
+        $.wtb.addCaster("Morvahna the Dawnshadow","Circle");
+		//Skorne
+		$.wtb.addCaster("Master Ascetic Naaresh","Skorne");
+        $.wtb.addCaster("Archdomina Makeda","Skorne");
+        $.wtb.addCaster("Dominar Rasheth","Skorne");
+        $.wtb.addCaster("Lord Arbiter Hexeris","Skorne");
+        $.wtb.addCaster("Lord Assassin Morghoul","Skorne");
+        $.wtb.addCaster("Lord Tyrant Hexeris","Skorne");
+        $.wtb.addCaster("Makeda & The Exalted Court","Skorne");
+        $.wtb.addCaster("Master Tormentor Morghoul","Skorne");
+        $.wtb.addCaster("Supreme Aptimus Zaal & Kovaas","Skorne");
+        $.wtb.addCaster("Supreme Archdomina Makeda","Skorne");
+        $.wtb.addCaster("Tyrant Xerxis","Skorne");
+        $.wtb.addCaster("Void Seer Mordikaar","Skorne");
+        $.wtb.addCaster("Xerxis, Fury of Halaak","Skorne");
+        $.wtb.addCaster("Zaal, the Ancestral Advocate","Skorne");
+		//Legion
+		$.wtb.addCaster("Absylonia, Daughter of Everblight","Legion");
+        $.wtb.addCaster("Absylonia, Terror of Everblight","Legion");
+        $.wtb.addCaster("Bethayne and Belphagor","Legion");
+        $.wtb.addCaster("Kallus, Wrath of Everblight","Legion");
+        $.wtb.addCaster("Lylyth, Herald of Everblight","Legion");
+        $.wtb.addCaster("Lylyth, Reckoning of Everblight","Legion");
+        $.wtb.addCaster("Lylyth, Shadow of Everblight","Legion");
+        $.wtb.addCaster("Rhyas, Sigil of Everblight","Legion");
+        $.wtb.addCaster("Saeryn, Omen of Everblight","Legion");
+        $.wtb.addCaster("Thagrosh the Messiah","Legion");
+        $.wtb.addCaster("Thagrosh, Prophet of Everblight","Legion");
+        $.wtb.addCaster("Vayl, Consul of Everblight","Legion");
+        $.wtb.addCaster("Vayl, Disciple of Everblight","Legion");
+		//Minions
+		$.wtb.addCaster("Bloody Barnabas","Minions");
+        $.wtb.addCaster("Calaban the Grave Walker","Minions");
+        $.wtb.addCaster("Dr. Arkadius","Minions");
+        $.wtb.addCaster("Helga the Conquerer","Minions");
+        $.wtb.addCaster("Jaga-Jaga, the Death Charmer","Minions");
+        $.wtb.addCaster("Lord Carver, BMMD, Esq. III","Minions");
+        $.wtb.addCaster("Maelok the Dreadbound","Minions");
+        $.wtb.addCaster("Midas","Minions");
+        $.wtb.addCaster("Rask","Minions");
+        $.wtb.addCaster("Sturm & Drang","Minions");
+		//Bankrupt
+		$.wtb.addCaster("Brun Cragback & Lug","Bankrupt");
+        $.wtb.addCaster("Dahlia Hallyr & Skarath","Bankrupt");
+        $.wtb.addCaster("Rorsh & Brine","Bankrupt");
+        $.wtb.addCaster("Wrong Eye & Snapjaw","Bankrupt");
+        $.wtb.addCaster("Beast Mistress","Bankrupt");
+        $.wtb.addCaster("Tyrant Zaadesh","Bankrupt");
+        $.wtb.addCaster("Una the Falconer","Bankrupt");
+        $.wtb.addCaster("Horgle Ironstrike","Bankrupt");
+        $.wtb.addCaster("Journeyman Warcaster","Bankrupt");
+        $.wtb.addCaster("Lieutenant Allison Jakes","Bankrupt");
+        $.wtb.addCaster("Initiate Tristan Durant","Bankrupt");
+        $.wtb.addCaster("Kovnik Andrei Malakov","Bankrupt");
+        $.wtb.addCaster("Aiakos, Scourge of the Meredius","Bankrupt");
+        $.wtb.addCaster("Elara, Tyro of the Third Chamber","Bankrupt");
+        $.wtb.addCaster("Gastone Crosse","Bankrupt");
+		
 	};
-
-	/*
-	 * adds a header in for internal record keeping and clones it's section
-	 * prepares the section's initial state (removes it if hidden)
-	 *
-	 * @param formID the element ID of the form
-	 * @param header the jquery object of the section's header
-	 */
-	$.wtb.addFormSection = function (formID, header) {
-		var subForm = header.next();
-		var sectionID = subForm.attr('id');
-	        header.attr('child-hidden', true);
-		header.attr('child-id', subForm.attr('id'));
-
-		$.wtb.formSections[formID][sectionID] = subForm;
-		$.wtb.formHeaders[formID][sectionID] = header;
-		if ($.wtb.isSubFormEmpty(formID, sectionID)) {
-			$.wtb.disableSubForm(formID,sectionID);
-		} else {
-			$.wtb.enableSubForm(formID,sectionID);
-		}
-	}
-
-		/*
-    	 * disables all elements of a sub form and hides it
-    	 *
-    	 * @param formID the element ID of the form
-    	 * @param sectionID the element id of the section in question
-    	 */
-	$.wtb.disableSubForm = function (formID,sectionID) {
-		var header = $.wtb.formHeaders[formID][sectionID];
-		var subForm= $.wtb.formSections[formID][sectionID];
-		subForm.find('input').attr('disabled',true);
-		header.find('img').attr('src','/images/plus.png');
-		header.attr('child-hidden', true);
-		subForm.hide();
-	}
-	/*
-    	 * re enables a subform
-    	 *
-    	 * @param formID the element ID of the form
-    	 * @param sectionID the element id of the section in question
-    	 */
-	$.wtb.enableSubForm = function (formID,sectionID) {
-		var header = $.wtb.formHeaders[formID][sectionID];
-    	var subForm= $.wtb.formSections[formID][sectionID];
-		header.attr('child-hidden', false);
-		subForm.find('input').removeAttr('disabled');
-		header.find('img').attr('src','/images/minus.png')
-		subForm.show();
-	}
-
-	/*
-	 * checks to see if anything in the section is filled out
-	 *
-	 * @param formID the element ID of the form
-	 * @param sectionID the element id of the section in question
-	 */
-	$.wtb.isSubFormEmpty = function (formID, sectionID) {
-		var subForm= $.wtb.formSections[formID][sectionID];
-		var result = true;
-		subForm.find('input').each(function () {
-			if (
-				( $(this).is(':checkbox') && $(this).is(':checked')) ||
-					( !$(this).is(':checkbox') && $(this).val())
-				) {
-				$.wtb.flashElement($(this));
-				result = false;
-			}
-		});
-		return result;
-	}
-
-	/*
-	 * animates an element to show it is filled out
-	 *
-	 * @param element the jquery element to be flashed
-	 */
-	$.wtb.flashElement = function (element) {
-		if (element.is(':checkbox')) {
-			var defaults = {
-				'outline-color': 'rgb(102, 36, 5)',
-				'outline-style': 'none' ,
-				'outline-width': '0px',
-				'opacity':1
-			}
-			var alert = {
-				'outline-color': 'red',
-				'outline-style': 'solid',
-				'outline-width': 'thin',
-				'opacity':1
-			}
-
-			element
-				.stop(true, true)
-				.css(defaults)
-				.css(alert);
-			element.fadeOut('250', 'swing').fadeIn('250', 'swing').fadeOut('250', 'swing').fadeIn('250', 'swing').css(defaults);
-			element.css(defaults);
-		} else {
-			var defaults = {
-				'border-color': "rgb(153, 153, 153)",
-            	'background-color':'rgb(255, 255, 255)',
-				'opacity':1
-			};
-			var alert = {
-				'border-color': "red",
-				'background-color':'#E9967A'
-			};
-			var borderColor = element.css('border-color');
-			var backgroundColor = element.css('background-color');
-			element.stop(true, true)
-				.animate(alert, '250')
-				.animate(defaults, '250')
-				.animate(alert, '250')
-				.animate(defaults, '250');
-		}
-
-	}
-
-	/*
-	 * rebinds the header click action to the section
-	 *
-	 * @param formID the element ID of the form
-	 * @param sectionID the element id of the section in question
-	 */
-	$.wtb.bindHeaderClick = function (formID, sectionID) {
-		var header = $.wtb.formHeaders[formID][sectionID];
-    	var subForm= $.wtb.formSections[formID][sectionID];
-		var header = $.wtb.form[formID].find('.CTRL_TYPE_DIV[child-id="' + sectionID + '"]');
-		header.find('.CTRL_TYPE_DIVLINK').removeAttr('onmousedown');
-		header.click(function () {
-			if (header.attr('child-hidden') == 'true') {
-            	$.wtb.enableSubForm(formID,sectionID);
-			} else {
-				if (!$.wtb.isSubFormEmpty(formID, sectionID)) {
-					return;
-				}
-				$.wtb.disableSubForm(formID,sectionID);
-			}
-		})
-
-	}
 
 })(jQuery);
