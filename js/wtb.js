@@ -61,9 +61,11 @@
                     throw  "This caster doesn't belong to this faction";
                 }
                 if(caster.player){
-                    this.availableCasterCount--;
+                    player = caster.player;
+                    player.caster = null;
+                    this.availableCasterCount++;
                 }
-                caster.player = null;
+                caster.player = null;;
             }
 
             /**
