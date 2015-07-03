@@ -159,7 +159,7 @@
           * release the claim on this caster
           * @return void
           */
-          this.claim = function(){
+          this.release = function(){
               this.faction.releaseCaster(this);
           }
     }
@@ -293,7 +293,7 @@
         for (var i in factions) {
             var faction = factions[i];
             var roulette = $('<div class="wtb-roulette">');
-            roulette.addClass(faction);
+            roulette.addClass(faction.name);
             /*
             var casters = $.wtb.getFactionsAvailableCasters(faction);
             var casterCounter = 0;
@@ -320,7 +320,6 @@
     	    var roulette = $('.wtb-roulette.'+faction.name);
     	    roulette.html('');
    			var casters = faction.getAvailableCasters();
-
             var casterCounter = 0;
             var angle = 360/casters.length;
             for(casterName in casters){
