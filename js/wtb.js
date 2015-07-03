@@ -123,6 +123,39 @@
         this.faction = "";//faction name they play
         this.caster = null;//the caster currently given to them
         this.previousCasters = [];
+        /*
+        * Builds this players name tag
+        */
+        this.buildNameTag = function(){
+			var tag = $('<li data-player-name="'+this.name+'">');
+
+			var logo = this.faction.getLogo();
+			logo.css({'height':'20px'});
+			var logoSection = $('<span class="wtb-name-plate-faction"></span>');
+			logoSection.append(logo);
+			tag.append(logoSection);
+
+			tag.append('<span class="wtb-name-plate-name">'+this.name+'</span>');
+
+			if(this.caster){
+				var casterLogo = this.caster.faction.getLogo();
+            	casterLogo.css({'height':'20px'});
+            	var casterLogoSection = $('<span class="wtb-name-plate-faction"></span>');
+            	casterLogoSection.append(casterLogo);
+            	tag.append('<span>&nbsp;&nbsp;Caster:</span>');
+            	tag.append(casterLogoSection);
+				tag.append('<span class="wtb-name-plate-faction">&nbsp;'+this.caster.name+'</span>');
+			}else{
+				var link = $('<a class="wtb-name-plate-roll-for-caster" href="'+this.name+'">[ROLL]</a>');
+				link.click(function(event){
+					event.preventDefault();
+					var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+					$.wtb.assignPlayerARandomCaster(player);
+				});
+				tag.append(link);
+			}
+			return tag;
+        }
 	}
 
 	/**
@@ -206,6 +239,20 @@
 		return $.wtb.players;
 	}
 
+	/**
+    	* get a specified player
+    	* @param string playerName the players name you are looking for
+    	* @return Array[Player()]
+    	*/
+	$.wtb.getPlayer = function(playerName){
+		for (var i in $.wtb.players) {
+			var player = $.wtb.players[i];
+			if( player.name == playerName){
+				return player;
+			}
+		}
+		throw "Could not find player: "+playerName;
+	}
 
 	/**
 	* get a list of all factions
@@ -296,23 +343,124 @@
             var faction = factions[i];
             var roulette = $('<div class="wtb-roulette">');
             roulette.addClass(faction.name);
-            /*
-            var casters = $.wtb.getFactionsAvailableCasters(faction);
-            var casterCounter = 0;
-            var angle = 360/casters.length;
-            for(casterName in casters){
-                var caster = casters[casterName];
-                var imageContainer = $('<div class="wtb-caster-container">');
-				imageContainer.attr('style',"-webkit-transform: rotateX("+casterCounter*angle+"deg) translateZ(200px);");
-				imageContainer.append(caster.getImage())
-                roulette.append(imageContainer);
-                casterCounter++;
-			}
-			*/
 			container.append(roulette);
 			$.wtb.populateFactionRoulette(faction);
         }
     }
+
+	/**
+    * Creates a form to add new players
+    */
+    $.wtb.buildPlayerForm = function(){
+        var formContainer = $("<div class='wtb-player-form-container'>");
+        var form = $("<form class='wtb-player-form-container'>");
+        var nameInput = $("<input name='wtb-player-name'>");
+        var factionSelect = $("<select name='wtb-player-faction'>");
+		var submit = $("<input type='submit' name='wtb-submit' value='Add'>");
+		var clear = $("<input type='submit' name='wtb-clear' value='Clear Claimed Casters'>");
+        var factions = $.wtb.getFactions();
+		factionSelect.append('<option value=""></option>')
+        for (var i in factions) {
+            var faction = factions[i];
+            if(faction.name == 'Bankrupt'){continue;}
+            factionSelect.append('<option value="'+faction.name+'">'+faction.name+'</option>')
+        }
+        form.append('<span>Player Name:</span>');
+		form.append(nameInput);
+		form.append('<span>Faction:</span>');
+		form.append(factionSelect);
+		form.append(submit);
+		form.append(clear);
+		clear.click(function( event ){
+			event.preventDefault();
+			$.wtb.clearClaimed()
+			$.wtb.buildNamePlates();
+		});
+		form.submit(function( event ) {
+          event.preventDefault();
+			if($.wtb.validatePlayerForm(form)){
+				$.wtb.handlePlayerFormSubmit(form)
+			}
+        });
+
+        //form.on('submit',$.wtb.handlePlayerFormSubmit());
+        formContainer.append(form);
+        $.wtb.target.append(formContainer);
+    }
+
+    	/**
+        * Creates a area to add player tags
+        */
+        $.wtb.buildTagArea = function(){
+            var container = $("<div class='wtb-player-tag-container'><ul></ul></div>");
+            $.wtb.target.append(container);
+        }
+
+        /**
+        * add a player tag
+        */
+        $.wtb.buildNamePlates = function(){
+            var container = $(".wtb-player-tag-container ul");
+			for( var i in $.wtb.players ){
+				var player = $.wtb.players[i];
+				var tag = player.buildNameTag();
+				var oldTag = container.find('li[data-player-name="'+player.name+'"]');
+				if(oldTag.length){
+					oldTag.replaceWith(tag);
+				}else{
+					container.append(tag);
+				}
+			}
+        }
+
+	/**
+        * handles form submits
+        * @param $(form) player form of this widget
+        */
+    $.wtb.handlePlayerFormSubmit = function(form){
+		var name = form.find('input[name="wtb-player-name"]').val();
+		var factionName = form.find('select[name="wtb-player-faction"]').val();
+		var player = $.wtb.addPlayer(name, $.wtb.getFaction(factionName) );
+
+		form.find('input[name="wtb-player-name"]').removeClass('ui-state-error').val('');
+        form.find('select[name="wtb-player-faction"]').removeClass('ui-state-error').val('');
+
+
+		$.wtb.buildNamePlates();
+		return player;
+    }
+	/**
+    * validates the player form
+    * @param $(form) player form of this widget
+    */
+    $.wtb.validatePlayerForm = function(form){
+        var passed = true;
+		var name = form.find('input[name="wtb-player-name"]').val();
+		var faction = form.find('select[name="wtb-player-faction"]').val();
+		if(!name){
+			form.find('input[name="wtb-player-name"]').addClass('ui-state-error');
+			passed = false;
+		}
+		if( !faction ){
+            form.find('select[name="wtb-player-faction"]').addClass('ui-state-error');
+            passed = false;
+        }
+		return passed;
+    }
+
+
+		/**
+		* Grabs the faction object of a specified name
+		* @throws Exception can't find faction
+		* @param string factionName faction we are looking for
+		*/
+		$.wtb.getFaction = function (factionName){
+			faction = $.wtb.factions[factionName];
+			if(!faction){
+				throw 'can not find the specified faction: '+factionName;
+			}
+			return faction;
+		}
 
 		/**
     	* Populates a roulette bar with available casters
@@ -339,7 +487,7 @@
     	* @param Player player player to get a random caster
     	*/
 		$.wtb.assignPlayerARandomCaster = function(player){
-			var factions = $.wtb.getAvailableFactions(player.faction);
+			var factions = $.wtb.getAvailableFactions(player.faction.name);
             var selection = Math.floor((Math.random() * factions.length));
 			faction = factions[selection];
 			caster = $.wtb.pullCasterForFaction(faction, player);
@@ -397,6 +545,8 @@
 			if(r){
 				caster.claim(player);
 				$.wtb.populateFactionRoulette(caster.faction);
+				$.wtb.buildNamePlates();
+
 			}else{
 				$.wtb.populateFactionRoulette(caster.faction);
 			}
@@ -652,6 +802,8 @@
         $.wtb.addCaster("Gastone Crosse","Bankrupt");
 		$.wtb.buildFactionHeader();
 		$.wtb.buildRouletteContainer();
+		$.wtb.buildPlayerForm();
+		$.wtb.buildTagArea();
 	};
 
 })(jQuery);
