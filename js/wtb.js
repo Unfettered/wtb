@@ -129,6 +129,40 @@
 	}
 
 	/**
+	* get a list of all factions that have casters to claim
+	* @param string exclude faction name to not be included in the list
+	* @return Array<String> faction names
+	*/
+	$.wtb.getAvailableFactions = function(exclude){
+		exclude = exclude || null;
+		var factions = [];
+		for (var faction in $.wtb.factions) {
+            if (
+                $.wtb.factions.hasOwnProperty(faction) &&
+                faction != exclude &&
+                $.wtb.factionAvailable(faction)
+            ) {
+                factions.push(faction);
+            }
+        }
+        return factions;
+	}
+
+	/**
+    * get a list of all factions
+	* @param string faction name the faction
+    * @return Array<String> faction names
+    */
+    $.wtb.factionAvailable = function(faction){
+        for (var casterIterator in $.wtb.factions[faction]) {
+            if( $.wtb.factions[faction][casterIterator].claimed == 0 ){
+                return true
+            }
+        }
+        return false;
+    }
+
+	/**
 	* get a list of faction's casters
 	* @param string faction name the faction
 	* @return {Caster()} list of casters
@@ -250,19 +284,20 @@
     	* @param Player player player to get a random caster
     	*/
 		$.wtb.assignPlayerARandomCaster = function(player){
-
-			faction = 'Convergence';//XXX NEED TO RANDOMIZE
-			caster = $.wtb.pullCasterForFaction(faction);
-			$.wtb.claimCaster(caster, player);
+			var factions = $.wtb.getAvailableFactions(player.faction);
+            var selection = Math.floor((Math.random() * factions.length));
+			faction = factions[selection];
+			caster = $.wtb.pullCasterForFaction(faction, player);
 		}
 
 
 		/**
     	* randomly picks a caster from a faction that is available
     	* @param string faction name the faction
+    	* @param Player player player to get a random caster
     	* @return object
     	*/
-    	$.wtb.pullCasterForFaction = function (faction){
+    	$.wtb.pullCasterForFaction = function (faction,player){
     	    var roulette = $('.wtb-roulette.'+faction);
     	    if(roulette.hasClass('wtb-spinning')){
     	        return;
@@ -273,7 +308,7 @@
             var caster = casters[selection];
             var angle = increment * selection;
 
-            $.wtb.spinFactionsRoulette(faction, angle, selection);
+            $.wtb.spinFactionsRoulette(faction, angle, selection, caster, player);
 			return caster;
     	}
 
@@ -282,8 +317,10 @@
         * @param string faction name the faction
         * @param integer degrees how far to rotate
         * @param int select which caster (starting at 0) should be at the front
+        * @param Caster() caster object selected
+        * @param Player() player object spinning
         */
-        $.wtb.spinFactionsRoulette = function (faction, angle, select){
+        $.wtb.spinFactionsRoulette = function (faction, angle, select, caster, player){
 
             var roulette = $('.wtb-roulette.'+faction);
             $.wtb.changeSpinRule(angle);
@@ -292,10 +329,24 @@
                 roulette.removeClass('wtb-spinner');
                 roulette.removeClass('wtb-spinning');
 				$.wtb.updateRouletteAngles(faction, select);
-				$.wtb.populateFactionRoulette(faction);//this really shouldn't be here
+				$.wtb.confirmCasterSelection(caster, player);
             },4000);
         }
 
+		/**
+	    * confirm box for the selection
+        * @param Caster() caster object selected
+        * @param Player() player object spinning
+	    */
+		$.wtb.confirmCasterSelection = function(caster, player){
+			var r = confirm(player.name +' pulled ' + caster.name);
+			if(r){
+				$.wtb.claimCaster(caster, player);
+				$.wtb.populateFactionRoulette(caster.faction);
+			}else{
+				$.wtb.populateFactionRoulette(caster.faction);
+			}
+		}
 
 		/**
         * alters the xspin rule
@@ -347,6 +398,7 @@
         */
 		$.wtb.changeSpinRule = function(angle){
 	        // find our -webkit-keyframe rule
+	        angle = 360-angle
 	        console.log(angle);
 	        var keyframes = $.wtb.findKeyframesRule('x-spin');
 
