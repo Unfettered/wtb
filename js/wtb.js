@@ -15,22 +15,104 @@
 	$.wtb.players = new Array();
 	//factions available to play
 	$.wtb.factions = {
-		'Cygnar': {},
-		'Menoth': {},
-		'Khador': {},
-		'Cryx': {},
-		'Retribution': {},
-		'Mercenaries': {},
-		'Convergence': {},
-		'Trollbloods': {},
-		'Circle': {},
-		'Skorne': {},
-		'Legion': {},
-		'Minions': {},
-		'Bankrupt':{}
 	};
 	//defined z index for the roulette;
 	$.wtb.translateZ='250px';
+
+	/**
+	 * Faction Object Declaration
+	*/
+	$.wtb.faction = function () {
+            this.name = "";//faction name
+            this.casters = {};//all casters
+            this.casterCount = 0;//the caster currently given to them
+            this.availableCasterCount = 0;//the caster currently given to them
+            /**
+            *
+            */
+            this.addCaster = function(caster){
+                this.casters[caster.name] = caster;
+                caster.position = this.casterCount;
+                this.casterCount ++;
+                this.availableCasterCount++;
+            }
+            /**
+            	* claims a caster from a faction for a player
+            	* @param Caster caster caster object claimed
+            	* @param Player player Player object claiming
+            	*/
+            this.claimCaster = function(caster, player){
+                if(caster.faction != this){
+                    throw  "This caster doesn't belong to this faction";
+                }
+                if(player.caster){
+                    caster.release();
+                }
+                this.availableCasterCount--;
+                caster.player = player;
+                player.caster = caster;
+			}
+			 /**
+            * release a caster from a faction for a player
+            * @param Caster caster caster object claimed
+            */
+            this.releaseCaster = function(caster){
+                if(caster.faction != this){
+                    throw  "This caster doesn't belong to this faction";
+                }
+                if(caster.player){
+                    this.availableCasterCount--;
+                }
+                caster.player = null;
+            }
+
+            /**
+             * Gets this factions image path
+             * @return string path the the casters image
+            */
+            this.getImagePath = function(){
+                return $.wtb.imagePath+'/'+this.name.toLowerCase()+'.png';
+            }
+
+            /**
+             * Creates a jquery object for a dom element image
+             * @return $(DOM) image of caster
+            */
+            this.getLogo = function(){
+                var image = $('<img src="'+this.getImagePath()+'">');
+                return image;
+            }
+
+            /**
+            * is this faction available
+            * @param string faction name the faction
+            * @return Array<String> faction names
+            */
+            this.isAvailable = function(faction){
+                if( this.availableCasterCount > 0 ){
+                    return true;
+                }
+                return false;
+            }
+
+            /**
+            * get a list of faction's casters that have not been claimed
+            * @return {Caster()} list of casters
+            */
+            this.getAvailableCasters = function (){
+                var casters = this.casters;
+                var available = [];
+                for (var casterName in casters) {
+                    caster = casters[casterName];
+                    if(!caster.player){
+                        available.push(caster);
+                    }
+                }
+                return available;
+            }
+
+    	}
+
 	/**
 	 * Player Object Declaration
 	*/
@@ -46,15 +128,15 @@
 	*/
 	$.wtb.caster = function () {
         this.name = "";//casters name
-        this.faction = "";//faction name
-        this.claimed = 0;//has someone claimed them
-
+        this.faction = null;//faction model
+		this.position = null;//casters position in the faction listing. accessibility variable
+		this.player = null; //who has claimed this
         /**
          * Gets this casters image path
          * @return string path the the casters image
         */
         this.getImagePath = function(){
-            return $.wtb.imagePath+'/'+this.faction.toLowerCase()+'/'+this.name+'.png';
+            return $.wtb.imagePath+'/'+this.faction.name.toLowerCase()+'/'+this.name+'.png';
         }
 
         /**
@@ -65,6 +147,21 @@
             var image = $('<img src="'+this.getImagePath()+'">');
             return image;
         }
+        /**
+         * Claims the caster for a player
+         * @param Player player person claiming this caster
+         * @return void
+         */
+         this.claim = function(player){
+             this.faction.claimCaster(this, player);
+         }
+         /**
+          * release the claim on this caster
+          * @return void
+          */
+          this.claim = function(){
+              this.faction.releaseCaster(this);
+          }
     }
 
 	/**
@@ -72,11 +169,17 @@
 	* @param string casterName name of the caster
 	* @param string faction name of the caster's faction
 	*/
-    $.wtb.addCaster = function (casterName,faction){
+    $.wtb.addCaster = function (casterName,factionName){
+        if(!$.wtb.factions[factionName]){
+    		faction = new $.wtb.faction;
+    		faction.name = factionName;
+    		$.wtb.factions[factionName] = faction;
+        }
+        var faction = $.wtb.factions[factionName];
         var caster = new $.wtb.caster;
         caster.faction = faction;
         caster.name = casterName;
-        $.wtb.factions[faction][casterName] =caster;
+        $.wtb.factions[factionName].addCaster(caster);
     }
 
 	/**
@@ -101,16 +204,6 @@
 		return $.wtb.players;
 	}
 
-	/**
-	* get a faction's logo image
-	* @param string faction name the faction
-	* @return $(<img>) faction logo
-	*/
-	$.wtb.getFactionLogo = function(faction){
-		var src = $.wtb.imagePath+'/'+faction.toLowerCase()+'.png';
-        var image = $('<img src="'+src+'">');
-        return image;
-	}
 
 	/**
 	* get a list of all factions
@@ -120,8 +213,9 @@
 	$.wtb.getFactions = function(exclude){
 		exclude = exclude || null;
 		var factions = [];
-		for (var faction in $.wtb.factions) {
-            if ($.wtb.factions.hasOwnProperty(faction) && faction != exclude) {
+		for (var factionName in $.wtb.factions) {
+			var faction = $.wtb.factions[factionName];
+            if ( faction.name != exclude) {
                 factions.push(faction);
             }
         }
@@ -136,78 +230,35 @@
 	$.wtb.getAvailableFactions = function(exclude){
 		exclude = exclude || null;
 		var factions = [];
-		for (var faction in $.wtb.factions) {
-            if (
-                $.wtb.factions.hasOwnProperty(faction) &&
-                faction != exclude &&
-                $.wtb.factionAvailable(faction)
-            ) {
+		for (var factionName in $.wtb.factions) {
+			var faction = $.wtb.factions[factionName];
+            if ( faction.name != exclude && faction.isAvailable()) {
                 factions.push(faction);
             }
         }
         return factions;
 	}
 
-	/**
-    * get a list of all factions
-	* @param string faction name the faction
-    * @return Array<String> faction names
-    */
-    $.wtb.factionAvailable = function(faction){
-        for (var casterIterator in $.wtb.factions[faction]) {
-            if( $.wtb.factions[faction][casterIterator].claimed == 0 ){
-                return true
-            }
-        }
-        return false;
-    }
+
 
 	/**
 	* get a list of faction's casters
 	* @param string faction name the faction
 	* @return {Caster()} list of casters
 	*/
-	$.wtb.getFactionsCasters = function (faction){
-		return $.wtb.factions[faction];
-	}
-
-	/**
-	* get a list of faction's casters that have not been claimed
-    * @param string faction name the faction
-    * @return {Caster()} list of casters
-	*/
-	$.wtb.getFactionsAvailableCasters = function (faction){
-        var casters = $.wtb.getFactionsCasters(faction);
-        var available = [];
-		for (var casterName in casters) {
-			caster = casters[casterName];
-			if(caster.claimed == 0){
-				available.push(caster);
-			}
-		}
-		return available;
-    }
-
-	$.wtb.claimCaster = function (caster, player){
-		if(player.caster){
-			player.caster.claimed = 0;
-		}
-		$.wtb.factions[caster.faction][caster.name].claimed = 1;
-		player.caster = caster;
+	$.wtb.getFactionsCasters = function (factionName){
+		return faction.casters;
 	}
 
 	/**
 	* clears all references to claimed casters
 	*/
 	$.wtb.clearClaimed = function (caster, player){
-		for (var i in $.wtb.players) {
-			player = $.wtb.players[i];
-			player.caster = null;
-		}
-		for (var faction in $.wtb.factions) {
-            var casters = $.wtb.factions[faction];
+		for (var factionName in $.wtb.factions) {
+			faction = $.wtb.factions[factionName];
+            var casters = faction.casters;
             for (var casterName in casters) {
-                $.wtb.factions[faction][casterName].claimed = 0;
+                faction.casters[casterName].release();
             }
         }
 	}
@@ -221,51 +272,55 @@
 		for (var i in factions) {
 			var faction = factions[i];
 			var panel = $('<div class="wtb-panel">');
-			panel.addClass(faction);
-			panel.append($.wtb.getFactionLogo(faction));
+			panel.addClass(faction.name);
+			panel.append(faction.getLogo());
 			header.append(panel);
 		}
 		$.wtb.target.append(header);
 	}
-		/**
-    	* Creates a roulette container for each faction
-    	*/
-    	$.wtb.buildRouletteContainer = function (){
-    		var factions = $.wtb.getFactions();
-    		var outerContainer = $("<div class='wtb-roulette-container'>");
-    		$.wtb.target.append(outerContainer);
-    		var container = $("<div class='wtb-rotate'>");
-    		outerContainer.append(container);
-    		for (var i in factions) {
-    			var faction = factions[i];
-    			var roulette = $('<div class="wtb-roulette">');
-    			roulette.addClass(faction);
-    			/*
-    			var casters = $.wtb.getFactionsAvailableCasters(faction);
-    			var casterCounter = 0;
-    			var angle = 360/casters.length;
-    			for(casterName in casters){
-    			    var caster = casters[casterName];
-    			    var imageContainer = $('<div class="wtb-caster-container">');
-					imageContainer.attr('style',"-webkit-transform: rotateX("+casterCounter*angle+"deg) translateZ(200px);");
-					imageContainer.append(caster.getImage())
-    			    roulette.append(imageContainer);
-    			    casterCounter++;
-				}
-				*/
-				container.append(roulette);
-				$.wtb.populateFactionRoulette(faction);
-    		}
-    	}
+
+
+
+	/**
+    * Creates a roulette container for each faction
+    */
+    $.wtb.buildRouletteContainer = function (){
+        var factions = $.wtb.getFactions();
+        var outerContainer = $("<div class='wtb-roulette-container'>");
+        $.wtb.target.append(outerContainer);
+        var container = $("<div class='wtb-rotate'>");
+        outerContainer.append(container);
+        for (var i in factions) {
+            var faction = factions[i];
+            var roulette = $('<div class="wtb-roulette">');
+            roulette.addClass(faction);
+            /*
+            var casters = $.wtb.getFactionsAvailableCasters(faction);
+            var casterCounter = 0;
+            var angle = 360/casters.length;
+            for(casterName in casters){
+                var caster = casters[casterName];
+                var imageContainer = $('<div class="wtb-caster-container">');
+				imageContainer.attr('style',"-webkit-transform: rotateX("+casterCounter*angle+"deg) translateZ(200px);");
+				imageContainer.append(caster.getImage())
+                roulette.append(imageContainer);
+                casterCounter++;
+			}
+			*/
+			container.append(roulette);
+			$.wtb.populateFactionRoulette(faction);
+        }
+    }
 
 		/**
     	* Populates a roulette bar with available casters
     	* @param string faction name the faction
     	*/
     	$.wtb.populateFactionRoulette = function (faction){
-    	    var roulette = $('.wtb-roulette.'+faction);
+    	    var roulette = $('.wtb-roulette.'+faction.name);
     	    roulette.html('');
-   			var casters = $.wtb.getFactionsAvailableCasters(faction);
+   			var casters = faction.getAvailableCasters();
+
             var casterCounter = 0;
             var angle = 360/casters.length;
             for(casterName in casters){
@@ -277,7 +332,6 @@
                 casterCounter++;
 			}
     	}
-
 
 		/**
     	* Populates a roulette bar with available casters
@@ -293,22 +347,22 @@
 
 		/**
     	* randomly picks a caster from a faction that is available
-    	* @param string faction name the faction
+    	* @param faction faction faction pulling from
     	* @param Player player player to get a random caster
     	* @return object
     	*/
     	$.wtb.pullCasterForFaction = function (faction,player){
-    	    var roulette = $('.wtb-roulette.'+faction);
+    	    var roulette = $('.wtb-roulette.'+faction.name);
     	    if(roulette.hasClass('wtb-spinning')){
     	        return;
     	    }
-   			var casters = $.wtb.getFactionsAvailableCasters(faction);
+   			var casters = faction.getAvailableCasters();
             var selection = Math.floor((Math.random() * casters.length));
             var increment = 360/casters.length;
             var caster = casters[selection];
             var angle = increment * selection;
 
-            $.wtb.spinFactionsRoulette(faction, angle, selection, caster, player);
+            $.wtb.spinFactionsRoulette(faction, angle, caster, player);
 			return caster;
     	}
 
@@ -320,19 +374,18 @@
         * @param Caster() caster object selected
         * @param Player() player object spinning
         */
-        $.wtb.spinFactionsRoulette = function (faction, angle, select, caster, player){
-
-            var roulette = $('.wtb-roulette.'+faction);
+        $.wtb.spinFactionsRoulette = function (faction, angle, caster, player){
+			var caster = caster;
+            var roulette = $('.wtb-roulette.'+faction.name);
             $.wtb.changeSpinRule(angle);
             roulette.removeClass('wtb-spinner').addClass('wtb-spinner');
             window.setTimeout(function(){
                 roulette.removeClass('wtb-spinner');
                 roulette.removeClass('wtb-spinning');
-				$.wtb.updateRouletteAngles(faction, select);
+				$.wtb.updateRouletteAngles(faction, caster.position);
 				$.wtb.confirmCasterSelection(caster, player);
             },4000);
         }
-
 		/**
 	    * confirm box for the selection
         * @param Caster() caster object selected
@@ -341,7 +394,7 @@
 		$.wtb.confirmCasterSelection = function(caster, player){
 			var r = confirm(player.name +' pulled ' + caster.name);
 			if(r){
-				$.wtb.claimCaster(caster, player);
+				caster.claim(player);
 				$.wtb.populateFactionRoulette(caster.faction);
 			}else{
 				$.wtb.populateFactionRoulette(caster.faction);
@@ -355,9 +408,9 @@
         * @return void
         */
 		$.wtb.updateRouletteAngles = function(faction, frontPosition){
-			var roulette = $('.wtb-roulette.'+faction);
+			var roulette = $('.wtb-roulette.'+faction.name);
 			var i = 0;
-			var casters = $.wtb.getFactionsAvailableCasters(faction);
+			var casters = faction.getAvailableCasters();
 			var increment = 360/casters.length;
 			roulette.find('.wtb-caster-container').each(function(){
 				var casterPanel = $(this);
@@ -399,7 +452,6 @@
 		$.wtb.changeSpinRule = function(angle){
 	        // find our -webkit-keyframe rule
 	        angle = 360-angle
-	        console.log(angle);
 	        var keyframes = $.wtb.findKeyframesRule('x-spin');
 
 	        // remove the existing 0% and 100% rules
@@ -407,8 +459,8 @@
 	        keyframes.deleteRule("100%");
 
 	        // create new 0% and 100% rules with random numbers
-	        keyframes.insertRule("0% { -webkit-transform: rotateX(720deg); }");//always at least one full spin
-	        keyframes.insertRule("100% { -webkit-transform: rotateX("+angle+"deg); }");
+	        keyframes.appendRule("0% { -webkit-transform: rotateX(720deg); }");//always at least one full spin
+	        keyframes.appendRule("100% { -webkit-transform: rotateX("+angle+"deg); }");
 	    }
 
 
