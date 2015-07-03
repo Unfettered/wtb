@@ -93,9 +93,6 @@
 	width: 90px;
 	float:left;
 	-webkit-transform-style: preserve-3d;
-	-webkit-animation-timing-function: ease-out;
-	-webkit-animation-name: x-spin;
-	/*-webkit-animation-iteration-count: infinite;*/
 }
 .wtb-roulette.Cygnar{
 	/*
@@ -105,6 +102,4 @@
 }
 @-webkit-keyframes x-spin {
 	0%    { -webkit-transform: rotateX(360deg);}
-	50%   { -webkit-transform: rotateX(180deg); }
-	100%  { -webkit-transform: rotateX(0deg); }
 }

@@ -264,7 +264,13 @@
         */
         $.wtb.spinFactionsRoulette = function (faction, degrees){
             var roulette = $('.wtb-roulette.'+faction);
-            roulette.attr('style', '-webkit-animation-name: x-spin;-webkit-animation-duration: 8s;');
+			roulette.css({
+				'-webkit-animation-name': 'x-spin',
+				'-webkit-animation-timing-function': 'ease-out',
+				'-webkit-animation-iteration-count': 1,
+				'-webkit-animation-duration': '4s',
+				'-webkit-animation-direction': 'normal'
+			});
         }
 	/*
 	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
