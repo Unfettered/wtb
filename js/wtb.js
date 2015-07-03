@@ -244,36 +244,124 @@
 			}
     	}
 
+
+		/**
+    	* Populates a roulette bar with available casters
+    	* @param Player player player to get a random caster
+    	*/
+		$.wtb.assignPlayerARandomCaster = function(player){
+
+			faction = 'Convergence';//XXX NEED TO RANDOMIZE
+			caster = $.wtb.pullCasterForFaction(faction);
+			$.wtb.claimCaster(caster, player);
+		}
+
+
 		/**
     	* randomly picks a caster from a faction that is available
     	* @param string faction name the faction
     	* @return object
     	*/
     	$.wtb.pullCasterForFaction = function (faction){
+    	    var roulette = $('.wtb-roulette.'+faction);
+    	    if(roulette.hasClass('wtb-spinning')){
+    	        return;
+    	    }
    			var casters = $.wtb.getFactionsAvailableCasters(faction);
             var selection = Math.floor((Math.random() * casters.length));
+            var increment = 360/casters.length;
             var caster = casters[selection];
-            var angle = 360/casters.length * selection;
-            return {'caster':caster,'angle':angle,'position':selection};
+            var angle = increment * selection;
+
+            $.wtb.spinFactionsRoulette(faction, angle, selection);
+			return caster;
     	}
 
 		/**
         * animate faction roulette
         * @param string faction name the faction
         * @param integer degrees how far to rotate
+        * @param int select which caster (starting at 0) should be at the front
         */
-        $.wtb.spinFactionsRoulette = function (faction, degrees){
+        $.wtb.spinFactionsRoulette = function (faction, angle, select){
+
             var roulette = $('.wtb-roulette.'+faction);
-			roulette.css({
-				'-webkit-animation-name': 'x-spin',
-				'-webkit-animation-timing-function': 'ease-out',
-				'-webkit-animation-iteration-count': 1,
-				'-webkit-animation-duration': '4s',
-				'-webkit-animation-direction': 'normal'
-			});
+            $.wtb.changeSpinRule(angle);
+            roulette.removeClass('wtb-spinner').addClass('wtb-spinner');
+            window.setTimeout(function(){
+                roulette.removeClass('wtb-spinner');
+                roulette.removeClass('wtb-spinning');
+				$.wtb.updateRouletteAngles(faction, select);
+				$.wtb.populateFactionRoulette(faction);//this really shouldn't be here
+            },4000);
         }
+
+
+		/**
+        * alters the xspin rule
+        * @param string faction name the faction
+        * @param int frontPosition which caster (starting at 0) should be at the front
+        * @return void
+        */
+		$.wtb.updateRouletteAngles = function(faction, frontPosition){
+			var roulette = $('.wtb-roulette.'+faction);
+			var i = 0;
+			var casters = $.wtb.getFactionsAvailableCasters(faction);
+			var increment = 360/casters.length;
+			roulette.find('.wtb-caster-container').each(function(){
+				var casterPanel = $(this);
+				var degrees = (i - frontPosition) * increment;
+				casterPanel.css({'-webkit-transform': 'rotateX('+degrees+'deg) translateZ('+$.wtb.translateZ+')'});
+				i++;
+			});
+		}
+
+
+		/**
+        * search the CSSOM for a specific -webkit-keyframe rule
+        * @param string rule name of the transform rule in question
+        * @return obj css rule object, null if not present
+        */
+       $.wtb.findKeyframesRule = function(rule) {
+                // gather all stylesheets into an array
+                var styleSheets = document.styleSheets;
+
+                // loop through the stylesheets
+                for (var i = 0; i < styleSheets.length; ++i) {
+                    // loop through all the rules
+                    for (var j = 0; j < styleSheets[i].cssRules.length; ++j) {
+                        // find the -webkit-keyframe rule whose name matches our passed over parameter and return that rule
+                        if (styleSheets[i].cssRules[j].type == window.CSSRule.WEBKIT_KEYFRAMES_RULE && styleSheets[i].cssRules[j].name == rule){
+                            return styleSheets[i].cssRules[j];
+                        }
+                    }
+                }
+                // rule not found
+                return null;
+       }
+
+		/**
+        * alters the xspin rule
+        * @param int angle, where you want the roulette to stop
+        * @return void
+        */
+		$.wtb.changeSpinRule = function(angle){
+	        // find our -webkit-keyframe rule
+	        console.log(angle);
+	        var keyframes = $.wtb.findKeyframesRule('x-spin');
+
+	        // remove the existing 0% and 100% rules
+	        keyframes.deleteRule("0%");
+	        keyframes.deleteRule("100%");
+
+	        // create new 0% and 100% rules with random numbers
+	        keyframes.insertRule("0% { -webkit-transform: rotateX(720deg); }");//always at least one full spin
+	        keyframes.insertRule("100% { -webkit-transform: rotateX("+angle+"deg); }");
+	    }
+
+
 	/*
-	 * initializes the form reduction of a worltrac form with and advanced options subsection containing many sections
+	 * initializes the wtb plugin, pulls the target, sets up casters
 	 */
 	$.fn.wtb = function () {
 		$.wtb.target = $(this);

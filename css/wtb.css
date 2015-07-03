@@ -101,5 +101,14 @@
 	*/
 }
 @-webkit-keyframes x-spin {
-	0%    { -webkit-transform: rotateX(360deg);}
+	0%    { -webkit-transform: rotateX(720deg);}
+	100%    { -webkit-transform: rotateX(270deg);}
+
+}
+.wtb-spinner {
+	-webkit-animation-name : x-spin;
+	-webkit-animation-timing-function : ease-out;
+	-webkit-animation-iteration-count : 1;
+	-webkit-animation-duration : 4s;
+	-webkit-animation-direction : normal;
 }
