@@ -576,7 +576,7 @@
 		$.wtb.confirmCasterSelection = function(caster, player){
 			var r = confirm(player.name +' pulled ' + caster.name);
 			if(r){
-				if(caster.faction.name = 'Jackpot'){
+				if(caster.faction.name == 'Jackpot'){
 					$.wtb.resolveJackpot(caster, player);
 				}else{
 					caster.claim(player);
