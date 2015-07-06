@@ -21,12 +21,14 @@
 
 	/**
 	 * Faction Object Declaration
+	 * @param string factionName The factions's name
 	*/
-	$.wtb.faction = function () {
-            this.name = "";//faction name
+	$.wtb.faction = function (factionName) {
+            this.name = factionName;//faction name
             this.casters = {};//all casters
             this.casterCount = 0;//the caster currently given to them
             this.availableCasterCount = 0;//the caster currently given to them
+            this.imageName = factionName.toLowerCase()+'.png';
             /**
             *
             */
@@ -73,7 +75,7 @@
              * @return string path the the casters image
             */
             this.getImagePath = function(){
-                return $.wtb.imagePath+'/'+this.name.toLowerCase()+'.png';
+                return $.wtb.imagePath+'/'+this.imageName;
             }
 
             /**
@@ -117,10 +119,12 @@
 
 	/**
 	 * Player Object Declaration
+	 * @param string playerName The player's name
+	 * @param Faction() faction the faction this player is playing
 	*/
-	$.wtb.player = function () {
-        this.name = "";//player name
-        this.faction = "";//faction name they play
+	$.wtb.player = function (playerName, faction) {
+        this.name = playerName;//player name
+        this.faction = faction;//faction name they play
         this.caster = null;//the caster currently given to them
         this.previousCasters = [];
         /*
@@ -160,18 +164,23 @@
 
 	/**
 	 * Caster Object Declaration
+	 * @param string casterName The caster's name
+	 * @param Faction() faction the faction this player is playing
 	*/
-	$.wtb.caster = function () {
-        this.name = "";//casters name
-        this.faction = null;//faction model
+	$.wtb.caster = function (casterName, faction) {
+        this.name = casterName;//casters name
+        this.faction = faction;//faction model
 		this.position = null;//casters position in the faction listing. accessibility variable
 		this.player = null; //who has claimed this
+        this.imageName = casterName+'.png';//actual name of the image
+        faction.addCaster(this);
+
         /**
          * Gets this casters image path
          * @return string path the the casters image
         */
         this.getImagePath = function(){
-            return $.wtb.imagePath+'/'+this.faction.name.toLowerCase()+'/'+this.name+'.png';
+            return $.wtb.imagePath+'/'+this.faction.name.toLowerCase()+'/'+this.imageName;
         }
 
         /**
@@ -206,15 +215,11 @@
 	*/
     $.wtb.addCaster = function (casterName,factionName){
         if(!$.wtb.factions[factionName]){
-    		faction = new $.wtb.faction;
-    		faction.name = factionName;
+    		faction = new $.wtb.faction(factionName);
     		$.wtb.factions[factionName] = faction;
         }
         var faction = $.wtb.factions[factionName];
-        var caster = new $.wtb.caster;
-        caster.faction = faction;
-        caster.name = casterName;
-        $.wtb.factions[factionName].addCaster(caster);
+        var caster = new $.wtb.caster(casterName, faction);
     }
 
 	/**
@@ -224,9 +229,7 @@
 	* @return Player() player object added
 	*/
 	$.wtb.addPlayer = function (name, faction) {
-        var player = new $.wtb.player;
-        player.faction = faction;
-        player.name = name;
+        var player = new $.wtb.player(name, faction);
         $.wtb.players.push(player);
         return player;
     }
@@ -800,6 +803,11 @@
         $.wtb.addCaster("Aiakos, Scourge of the Meredius","Bankrupt");
         $.wtb.addCaster("Elara, Tyro of the Third Chamber","Bankrupt");
         $.wtb.addCaster("Gastone Crosse","Bankrupt");
+        //Jackpot
+	    $.wtb.addCaster("Dealer's Choice","Jackpot");
+	    $.wtb.addCaster("Emergency Respin","Jackpot");
+	    $.wtb.addCaster("Player's Choice","Jackpot");
+	    $.wtb.addCaster("Double Cross","Jackpot");
 		$.wtb.buildFactionHeader();
 		$.wtb.buildRouletteContainer();
 		$.wtb.buildPlayerForm();
