@@ -127,6 +127,8 @@
         this.faction = faction;//faction name they play
         this.caster = null;//the caster currently given to them
         this.previousCasters = [];
+        this.doubleCrosses = 0;
+        this.emergencyRespins = 0;
         /*
         * Builds this players name tag
         */
