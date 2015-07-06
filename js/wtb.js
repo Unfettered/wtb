@@ -172,8 +172,7 @@
 				link.click(function(event){
 					event.preventDefault();
 					var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
-					//$.wtb.assignPlayerARandomCaster(player);
-					$.wtb.assignPlayerARandomCaster(player, $.wtb.factions['Jackpot']);//TESTING
+					$.wtb.assignPlayerARandomCaster(player);
 				});
 				tag.append(link);
 			}
@@ -611,12 +610,20 @@
         * @param Player() player object spinning
         */
         $.wtb.selectCaster = function(caster, player){
+            var dialog = $('<div id="wtb-caster-picker-dialog">')
+
 			var form = $('<form name="ChooseACaster">');
 			form.append('<input type="HIDDEN" name="wtb-player-name" value="'+player.name+'">');
 			var factionSelect = $.wtb.buildFactionSelect(true);
+			form.append('<div style="width:120px;text-align:right">Faction:&nbsp;</div>');
+			factionSelect.css('margin-left','120px');
 			form.append(factionSelect);
-			form.append('<select name="wtb-caster">');
+			form.append('<div style="width:120px;text-align:right">Caster:&nbsp;</div>');
+			form.append('<select style="margin-left:120px" name="wtb-caster">');
+			form.append('<div style="display: inline;width:120px;text-align:right">&nbsp;</div>');
 			var submit = $("<input type='submit' name='wtb-select' value='Select'>");
+			form.append('<BR><BR>');
+			submit.css('margin-left','120px');
 			form.append(submit);
 			factionSelect.change(function(event){
 				casterSelect = $(this).parent().find('select[name="wtb-caster"]');
@@ -642,10 +649,19 @@
 				caster.claim(player);
 				$.wtb.populateFactionRoulette(caster.faction);
                 $.wtb.buildNamePlates();
-                $(this).remove();
+                dialog.close();
+                dialog.destroy();
+                dialog.remove();
 	        });
 
-	        $.wtb.target.prepend(form);
+	        dialog.append(form);
+	        dialog.dialog({
+	            modal:true,
+	            draggable:false,
+	            resizable:true,
+	            title:caster.name,
+	            width:800
+	        });
         }
 
 		/**
