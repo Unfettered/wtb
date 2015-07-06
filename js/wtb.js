@@ -811,6 +811,7 @@
         $.wtb.addCaster("Kaelyssa, Night's Whisper","Retribution");
         $.wtb.addCaster("Lord Arcanist Ossyan","Retribution");
         $.wtb.addCaster("Ravyn, Eternal Light","Retribution");
+        $.wtb.addCaster("Thyron, Sword of Truth","Retribution");
         $.wtb.addCaster("Vyros, Incissar of the Dawnguard","Retribution");
 		//Mercenaries
 		$.wtb.addCaster("Ashlynn D'Elyse","Mercenaries");
