@@ -39,6 +39,22 @@
                 this.availableCasterCount++;
             }
             /**
+            * get a specified caster
+            * @param string casterName the caster's name you are looking for
+            * @throws Exception could not find caster
+            * @return Caster()
+            */
+            this.getCaster = function(casterName){
+                for (var i in this.casters) {
+                    var caster = this.casters[i];
+                    if( caster.name == casterName){
+                        return caster;
+                    }
+                }
+                throw "Could not find player: "+casterName;
+            }
+
+            /**
             	* claims a caster from a faction for a player
             	* @param Caster caster caster object claimed
             	* @param Player player Player object claiming
@@ -156,7 +172,8 @@
 				link.click(function(event){
 					event.preventDefault();
 					var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
-					$.wtb.assignPlayerARandomCaster(player);
+					//$.wtb.assignPlayerARandomCaster(player);
+					$.wtb.assignPlayerARandomCaster(player, $.wtb.factions['Jackpot']);//TESTING
 				});
 				tag.append(link);
 			}
@@ -354,22 +371,33 @@
     }
 
 	/**
+    * build faction select
+    * @param bool includeBankrupt include bankrupt as an option
+    * @return $('<SELECT>') Jquery Dom Option for a select control
+    */
+	$.wtb.buildFactionSelect = function(includeBankrupt){
+		 var factionSelect = $("<select name='wtb-player-faction'>");
+         var factions = $.wtb.getFactions();
+         factionSelect.append('<option value=""></option>')
+         for (var i in factions) {
+            var faction = factions[i];
+            if(faction.name == 'Bankrupt' && !includeBankrupt){continue;}
+            if(faction.name == 'Jackpot'){continue;}
+            factionSelect.append('<option value="'+faction.name+'">'+faction.name+'</option>')
+         }
+         return factionSelect;
+	}
+
+	/**
     * Creates a form to add new players
     */
     $.wtb.buildPlayerForm = function(){
         var formContainer = $("<div class='wtb-player-form-container'>");
         var form = $("<form class='wtb-player-form-container'>");
         var nameInput = $("<input name='wtb-player-name'>");
-        var factionSelect = $("<select name='wtb-player-faction'>");
+        var factionSelect = $.wtb.buildFactionSelect(false);
 		var submit = $("<input type='submit' name='wtb-submit' value='Add'>");
 		var clear = $("<input type='submit' name='wtb-clear' value='Clear Claimed Casters'>");
-        var factions = $.wtb.getFactions();
-		factionSelect.append('<option value=""></option>')
-        for (var i in factions) {
-            var faction = factions[i];
-            if(faction.name == 'Bankrupt'){continue;}
-            factionSelect.append('<option value="'+faction.name+'">'+faction.name+'</option>')
-        }
         form.append('<span>Player Name:</span>');
 		form.append(nameInput);
 		form.append('<span>Faction:</span>');
@@ -388,7 +416,6 @@
 			}
         });
 
-        //form.on('submit',$.wtb.handlePlayerFormSubmit());
         formContainer.append(form);
         $.wtb.target.append(formContainer);
     }
@@ -491,10 +518,12 @@
     	* Populates a roulette bar with available casters
     	* @param Player player player to get a random caster
     	*/
-		$.wtb.assignPlayerARandomCaster = function(player){
-			var factions = $.wtb.getAvailableFactions(player.faction.name);
-            var selection = Math.floor((Math.random() * factions.length));
-			faction = factions[selection];
+		$.wtb.assignPlayerARandomCaster = function(player, faction){
+			if(!faction){
+				var factions = $.wtb.getAvailableFactions(player.faction.name);
+                var selection = Math.floor((Math.random() * factions.length));
+				faction = factions[selection];
+			}
 			caster = $.wtb.pullCasterForFaction(faction, player);
 		}
 
@@ -548,14 +577,76 @@
 		$.wtb.confirmCasterSelection = function(caster, player){
 			var r = confirm(player.name +' pulled ' + caster.name);
 			if(r){
-				caster.claim(player);
+				if(caster.faction.name = 'Jackpot'){
+					$.wtb.resolveJackpot(caster, player);
+				}else{
+					caster.claim(player);
+				}
 				$.wtb.populateFactionRoulette(caster.faction);
 				$.wtb.buildNamePlates();
-
 			}else{
 				$.wtb.populateFactionRoulette(caster.faction);
 			}
 		}
+
+		/**
+	    * handles awarding jackpot
+        * @param Caster() caster object selected
+        * @param Player() player object spinning
+	    */
+		$.wtb.resolveJackpot = function(caster, player){
+			if(caster.name == 'Emergency Respin'){
+				player.emergencyRespins++;
+			}else if(caster.name == 'Double Cross'){
+				player.doubleCrosses++;
+			}else{
+				$.wtb.selectCaster(caster,player);
+			}
+		}
+
+
+		/**
+        * builds and displays the dialog to allow a player to select his caster
+        * @param Caster() caster object selected
+        * @param Player() player object spinning
+        */
+        $.wtb.selectCaster = function(caster, player){
+			var form = $('<form name="ChooseACaster">');
+			form.append('<input type="HIDDEN" name="wtb-player-name" value="'+player.name+'">');
+			var factionSelect = $.wtb.buildFactionSelect(true);
+			form.append(factionSelect);
+			form.append('<select name="wtb-caster">');
+			var submit = $("<input type='submit' name='wtb-select' value='Select'>");
+			form.append(submit);
+			factionSelect.change(function(event){
+				casterSelect = $(this).parent().find('select[name="wtb-caster"]');
+				faction = $.wtb.factions[$(this).val()];
+				casters = faction.getAvailableCasters();
+				casterSelect.html('');
+				for( var i in casters ){
+					var caster = casters[i];
+					var option = $('<option value="'+caster.name+'">'+caster.name+'</option>');
+					casterSelect.append(option);
+				}
+
+			});
+
+			form.submit(function( event ) {
+	          event.preventDefault();
+	            factionName = $(this).find('select[name="wtb-player-faction"]').val();
+				casterName = $(this).find('select[name="wtb-caster"]').val();
+				playerName = $(this).find('input[name="wtb-player-name"]').val();
+				player = $.wtb.getPlayer(playerName);
+				faction = $.wtb.factions[factionName];
+				caster = faction.getCaster(casterName);
+				caster.claim(player);
+				$.wtb.populateFactionRoulette(caster.faction);
+                $.wtb.buildNamePlates();
+                $(this).remove();
+	        });
+
+	        $.wtb.target.prepend(form);
+        }
 
 		/**
         * alters the xspin rule
