@@ -64,13 +64,15 @@
                     throw  "This caster doesn't belong to this faction";
                 }
                 if(player.caster){
-                    caster.release();
+			var oldFaction = player.caster.faction;
+			player.caster.release();
+			$.wtb.populateFactionRoulette(oldFaction);
                 }
                 this.availableCasterCount--;
                 caster.player = player;
                 player.caster = caster;
-			}
-			 /**
+	}
+	 /**
             * release a caster from a faction for a player
             * @param Caster caster caster object claimed
             */
@@ -176,6 +178,23 @@
 				});
 				tag.append(link);
 			}
+
+
+			tag.append('<span>&nbsp;&nbsp;Respins:</span>');
+			if(this.emergencyRespins < 1){
+				tag.append('<span>&nbsp;&nbsp;0</span>');
+                        }else{
+                                var respinLink = $('<a class="wtb-name-plate-emergency-respin" href="'+this.name+'">'+this.emergencyRespins+'</a>');
+                                respinLink.click(function(event){
+                                        event.preventDefault();
+                                        var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+					player.emergencyRespins--;
+                                        $.wtb.assignPlayerARandomCaster(player);
+                                });
+                                tag.append(respinLink);
+                        }
+
+
 			var deleteLink = $('<a style="color:Red" class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
 			deleteLink.click(function(event){
 				event.preventDefault();
@@ -254,10 +273,10 @@
 	* @return Player() player object added
 	*/
 	$.wtb.addPlayer = function (name, faction) {
-        var player = new $.wtb.player(name, faction);
-        $.wtb.players.push(player);
-        return player;
-    }
+		var player = new $.wtb.player(name, faction);
+		$.wtb.players.push(player);
+		return player;
+	    }
 
 	/**
     	* get all players in the tournament
@@ -311,6 +330,25 @@
 		}
 		$.wtb.buildNamePlates();
 	}
+
+
+
+	/**
+    	* crosser double crosses crossee
+    	* @param player() crosser the player doing the double cross
+    	* @param player() crossee the player being double crossed
+    	*/
+	$.wtb.doubleCross= function(crosser, crossee){
+		var temp = crosser.caster;
+		if( crosser.doubleCrosses < 1){
+			throw "The double crosser has no double crosses to spend.";
+		}
+		crosser.doubleCrosses--;
+		crosser.caster = crossee.caster;
+		crossee.caster = temp;
+		$.wtb.buildNamePlates();
+	}
+
 
 	/**
 	* get a list of all factions
@@ -553,7 +591,7 @@
 		$.wtb.assignPlayerARandomCaster = function(player, faction){
 			if(!faction){
 				var factions = $.wtb.getAvailableFactions(player.faction.name);
-                var selection = Math.floor((Math.random() * factions.length));
+                		var selection = Math.floor((Math.random() * factions.length));
 				faction = factions[selection];
 			}
 			caster = $.wtb.pullCasterForFaction(faction, player);
@@ -595,10 +633,10 @@
             $.wtb.changeSpinRule(angle);
             roulette.removeClass('wtb-spinner').addClass('wtb-spinner');
             window.setTimeout(function(){
-                roulette.removeClass('wtb-spinner');
+		roulette.removeClass('wtb-spinner');
                 roulette.removeClass('wtb-spinning');
-				$.wtb.updateRouletteAngles(faction, caster.position);
-				$.wtb.confirmCasterSelection(caster, player);
+		$.wtb.updateRouletteAngles(faction, caster.position);
+		$.wtb.confirmCasterSelection(caster, player);
             },4000);
         }
 		/**
