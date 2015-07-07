@@ -151,72 +151,79 @@
 		* Builds this players name tag
 		*/
 		this.buildNameTag = function(){
-			var tag = $('<li data-player-name="'+this.name+'">');
+			var tag = $("<div class='wtb-player-nameplate "+this.faction.name.toLowerCase()+"'  data-player-name='"+this.name+"'>");
 
-			var logo = this.faction.getLogo();
-			logo.css({'height':'20px'});
-			var logoSection = $('<span class="wtb-name-plate-faction"></span>');
-			logoSection.append(logo);
-			tag.append(logoSection);
-
-			tag.append('<span class="wtb-name-plate-name">'+this.name+'</span>');
-
-			if(this.caster){
-				var casterLogo = this.caster.faction.getLogo();
-				casterLogo.css({'height':'20px'});
-				var casterLogoSection = $('<span class="wtb-name-plate-faction"></span>');
-				casterLogoSection.append(casterLogo);
-				tag.append('<span>&nbsp;&nbsp;Caster:</span>');
-				tag.append(casterLogoSection);
-				tag.append('<span class="wtb-name-plate-faction">&nbsp;'+this.caster.name+'</span>');
+			var factionLogo = $('<div class="faction-icon"><img src="'+this.faction.getImagePath()+'"></div>');
+			tag.append(factionLogo);
+			
+			var namePlate = $( '<div class="name-plate-names">' );
+			namePlate.append('<span style="font-weight:bold;text-decoration:underline;">Name:</span><BR>');
+			namePlate.append('<span>'+this.name+'</span><BR>');
+			if( this.caster ){
+				namePlate.append('<span style="font-weight:bold;text-decoration:underline;margin-top:3px;">Caster:</span><BR>');
+				namePlate.append('<span>'+this.caster.name+'</span>');
 			}else{
-				var link = $('<a class="wtb-name-plate-roll-for-caster" href="'+this.name+'">[ROLL]</a>');
-				link.click(function(event){
+				var rollLink = $('<a class="wtb-name-plate-roll-for-caster" href="'+this.name+'"><img src="/images/roll.svg"></a>');
+				rollLink.click(function(event){
 					event.preventDefault();
-					var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+					var player = $.wtb.getPlayer($(this).attr('href'));
 					$.wtb.assignPlayerARandomCaster(player);
 				});
-				tag.append(link);
+				namePlate.append(rollLink);
+				
 			}
+			tag.append(namePlate);			
 
 
-			tag.append('&nbsp;&nbsp;<img src="/images/jackpot/Emergency Respin.png" style="height: 20px;">:&nbsp;');
+			var iconPlate = $('<div class="icons-name-plate">');
+			
+			var deleteLink = $('<a class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
+			deleteLink.click(function(event){
+				event.preventDefault();
+				var player = $.wtb.getPlayer($(this).attr('href'));
+				$.wtb.deletePlayer(player);
+			});
+			iconPlate.append(deleteLink);
+			iconPlate.append('<BR>');
+			iconPlate.append('<BR>');
+
+			
+			var respinText = '<span>'+this.emergencyRespins+' x <img src="/images/jackpot/Emergency Respin.png"></span>'
 			if(this.emergencyRespins < 1){
-				tag.append('<span>&nbsp;&nbsp;0</span>');
+				iconPlate.append(respinText);
                         }else{
-                                var respinLink = $('<a class="wtb-name-plate-emergency-respin" href="'+this.name+'">'+this.emergencyRespins+'</a>');
+                                var respinLink = $('<a class="wtb-name-plate-emergency-respin" href="'+this.name+'">'+respinText+'</a>');
                                 respinLink.click(function(event){
                                         event.preventDefault();
-                                        var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+					var player = $.wtb.getPlayer($(this).attr('href'));
+
 					player.emergencyRespins--;
                                         $.wtb.assignPlayerARandomCaster(player);
                                 });
-                                tag.append(respinLink);
-                        }
+				 iconPlate.append(respinLink);
+			}
+			iconPlate.append('<BR>');
+			iconPlate.append('<BR>');
 
-			tag.append('&nbsp;&nbsp;<img src="/images/jackpot/Double Cross.png" style="height: 20px;">:&nbsp;');
+
+			var doubleCrossText = '<span>'+this.doubleCrosses+' x <img src="/images/jackpot/Double Cross.png"></span>'
 			if(this.doubleCrosses < 1){
-				tag.append('<span>&nbsp;&nbsp;0</span>');
+                                iconPlate.append( doubleCrossText );
                         }else{
-                                var doubleCrossLink = $('<a class="wtb-name-plate-double-cross" href="'+this.name+'">'+  this.doubleCrosses  +'</a>');
+                                var doubleCrossLink = $('<a class="wtb-name-plate-double-cross" href="'+this.name+'">'+  doubleCrossText  +'</a>');
                                 doubleCrossLink.click(function(event){
                                         event.preventDefault();
-                                        var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
-                                       	$.wtb.selectDoubleCross(player); 
+					var player = $.wtb.getPlayer($(this).attr('href'));
+
+                                        $.wtb.selectDoubleCross(player);
                                 });
-                                tag.append(doubleCrossLink);
+                               	iconPlate.append(doubleCrossLink);
                         }
 
 
-			tag.append('<span>&nbsp;</span>');
 
-			var deleteLink = $('<a style="color:Red" class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
-			deleteLink.click(function(event){
-				event.preventDefault();
-				var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
-				$.wtb.deletePlayer(player);
-			});
-			tag.append(deleteLink);
+			tag.append(iconPlate);
+
 			return tag;
 		}
 	}
@@ -513,7 +520,7 @@
         * Creates a area to add player tags
         */
         $.wtb.buildTagArea = function(){
-            var container = $("<div class='wtb-player-tag-container'><ul></ul></div>");
+            var container = $("<div class='wtb-player-tag-container'></div>");
             $.wtb.target.append(container);
         }
 
@@ -521,7 +528,7 @@
         * add a player tag
         */
         $.wtb.buildNamePlates = function(){
-		var container = $(".wtb-player-tag-container ul");
+		var container = $(".wtb-player-tag-container");
 		container.html('');	
 		for( var i in $.wtb.players ){
 			var player = $.wtb.players[i];

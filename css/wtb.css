@@ -31,8 +31,7 @@
 }
 .wtb-player-nameplate .name-plate-names{
 	padding-left:5px;
-	font-size:1.2em;
-	font-weight:bold;
+	font-size:1.1em;
 	position:relative;
 	float:left;
 	width:250px;
@@ -48,48 +47,69 @@
 .wtb-player-nameplate .icons-name-plate {
 	position:relative;
 	float:right;
-	width:50px;
+	width:60px;
 	height:100%;
+	text-align:right;
 }
 .wtb-player-nameplate .icons-name-plate img{
 	height: 20px;
+	-webkit-box-shadow: 1px 1px 2px 0px #777;
 }
 .cygnar{
+	background-color:#114b9a;
+	border-color:#b2953d;
 
 }
 .menoth{
+	background-color:#f2f1dc;
+	border-color:#6b160e;
 
 }
 .khador{
+	background-color:#ee2c24;
+	border-color:black;
 
 }
 .cryx{
+	background-color:#303924;
+	border-color:#83c54b;
 
 }
 .retribution{
 	background-color:#7acfd9;
 	border-color:#fffcfd;
-	color:#808f65;
 }
 .mercenaries{
+	background-color:#757131;
+	border-color:#927d47;
 
 }
 .convergence{
+	background-color:#c8c7d1;
+	border-color:#545d66;
 
 }
 .trollbloods{
-
+	background-color:#148799;
+	border-color:#936839;
 }
 .circle{
-
+	background-color:#086233;
+	border-color:#230500;
 }
 .skorne{
+	background-color:#b02024;
+	border-color:#c2ae48;
 
 }
 .legion{
+	background-color:#2d3342;
+	border-color:#005a61;
 
 }
 .minions{
+	background-color:#498e85;
+	border-color:#2d453d;
 
 }
 
