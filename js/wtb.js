@@ -8,7 +8,7 @@
 	//The location the widget will be drawn in the dom
 	$.wtb.target = null;
 	//The location the images are stored
-    $.wtb.imagePath = '/images';
+    	$.wtb.imagePath = '/images';
 	//Additional Options
 	$.wtb.advancedOptions = {};
 	//player list for the Tourney
@@ -139,16 +139,16 @@
 	 * @param Faction() faction the faction this player is playing
 	*/
 	$.wtb.player = function (playerName, faction) {
-        this.name = playerName;//player name
-        this.faction = faction;//faction name they play
-        this.caster = null;//the caster currently given to them
-        this.previousCasters = [];
-        this.doubleCrosses = 0;
-        this.emergencyRespins = 0;
-        /*
-        * Builds this players name tag
-        */
-        this.buildNameTag = function(){
+		this.name = playerName;//player name
+		this.faction = faction;//faction name they play
+		this.caster = null;//the caster currently given to them
+		this.previousCasters = [];
+		this.doubleCrosses = 0;
+		this.emergencyRespins = 0;
+		/*
+		* Builds this players name tag
+		*/
+		this.buildNameTag = function(){
 			var tag = $('<li data-player-name="'+this.name+'">');
 
 			var logo = this.faction.getLogo();
@@ -161,11 +161,11 @@
 
 			if(this.caster){
 				var casterLogo = this.caster.faction.getLogo();
-            	casterLogo.css({'height':'20px'});
-            	var casterLogoSection = $('<span class="wtb-name-plate-faction"></span>');
-            	casterLogoSection.append(casterLogo);
-            	tag.append('<span>&nbsp;&nbsp;Caster:</span>');
-            	tag.append(casterLogoSection);
+				casterLogo.css({'height':'20px'});
+				var casterLogoSection = $('<span class="wtb-name-plate-faction"></span>');
+				casterLogoSection.append(casterLogo);
+				tag.append('<span>&nbsp;&nbsp;Caster:</span>');
+				tag.append(casterLogoSection);
 				tag.append('<span class="wtb-name-plate-faction">&nbsp;'+this.caster.name+'</span>');
 			}else{
 				var link = $('<a class="wtb-name-plate-roll-for-caster" href="'+this.name+'">[ROLL]</a>');
@@ -176,8 +176,15 @@
 				});
 				tag.append(link);
 			}
+			var deleteLink = $('<a style="color:Red" class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
+			deleteLink.click(function(event){
+				event.preventDefault();
+				var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+				$.wtb.deletePlayer(player);
+			});
+			tag.append(deleteLink);
 			return tag;
-        }
+		}
 	}
 
 	/**
@@ -222,7 +229,7 @@
           * @return void
           */
           this.release = function(){
-              this.faction.releaseCaster(this);
+          	this.faction.releaseCaster(this);
           }
     }
 
@@ -273,6 +280,36 @@
 			}
 		}
 		throw "Could not find player: "+playerName;
+	}
+
+
+
+	/**
+    	* delete a specified player
+    	* @param player() player the player you are looking to delete
+    	* @return Array[Player()]
+    	*/
+	$.wtb.deletePlayer = function(player){
+		var newPlayers = [];
+		var faction = null;
+		if(player.caster){
+			faction = player.caster.faction;
+			player.caster.release();	
+		}
+		for (
+			var i = 0; 
+			i < $.wtb.players.length; 
+			i++
+		) {
+			if( player.name != $.wtb.players[i].name ){
+				newPlayers.push($.wtb.players[i]);	
+			}
+		}
+		$.wtb.players = newPlayers;
+		if(faction){
+			$.wtb.populateFactionRoulette(faction);
+		}
+		$.wtb.buildNamePlates();
 	}
 
 	/**
@@ -431,17 +468,13 @@
         * add a player tag
         */
         $.wtb.buildNamePlates = function(){
-            var container = $(".wtb-player-tag-container ul");
-			for( var i in $.wtb.players ){
-				var player = $.wtb.players[i];
-				var tag = player.buildNameTag();
-				var oldTag = container.find('li[data-player-name="'+player.name+'"]');
-				if(oldTag.length){
-					oldTag.replaceWith(tag);
-				}else{
-					container.append(tag);
-				}
-			}
+		var container = $(".wtb-player-tag-container ul");
+		container.html('');	
+		for( var i in $.wtb.players ){
+			var player = $.wtb.players[i];
+			var tag = player.buildNameTag();
+			container.append(tag);
+		}
         }
 
 	/**
