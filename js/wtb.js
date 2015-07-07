@@ -180,7 +180,7 @@
 			}
 
 
-			tag.append('<span>&nbsp;&nbsp;Respins:</span>');
+			tag.append('&nbsp;&nbsp;<img src="/images/jackpot/Emergency Respin.png" style="height: 20px;">:&nbsp;');
 			if(this.emergencyRespins < 1){
 				tag.append('<span>&nbsp;&nbsp;0</span>');
                         }else{
@@ -194,6 +194,21 @@
                                 tag.append(respinLink);
                         }
 
+			tag.append('&nbsp;&nbsp;<img src="/images/jackpot/Double Cross.png" style="height: 20px;">:&nbsp;');
+			if(this.doubleCrosses < 1){
+				tag.append('<span>&nbsp;&nbsp;0</span>');
+                        }else{
+                                var doubleCrossLink = $('<a class="wtb-name-plate-double-cross" href="'+this.name+'">'+  this.doubleCrosses  +'</a>');
+                                doubleCrossLink.click(function(event){
+                                        event.preventDefault();
+                                        var player = $.wtb.getPlayer($(this).parent().attr('data-player-name'));
+                                       	$.wtb.selectDoubleCross(player); 
+                                });
+                                tag.append(doubleCrossLink);
+                        }
+
+
+			tag.append('<span>&nbsp;</span>');
 
 			var deleteLink = $('<a style="color:Red" class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
 			deleteLink.click(function(event){
@@ -211,45 +226,45 @@
 	 * @param string casterName The caster's name
 	 * @param Faction() faction the faction this player is playing
 	*/
-	$.wtb.caster = function (casterName, faction) {
-        this.name = casterName;//casters name
-        this.faction = faction;//faction model
+	$.wtb.caster = function (casterName, faction, imageName) {
+		this.name = casterName;//casters name
+		this.faction = faction;//faction model
 		this.position = null;//casters position in the faction listing. accessibility variable
 		this.player = null; //who has claimed this
-        this.imageName = casterName+'.png';//actual name of the image
-        faction.addCaster(this);
+		this.imageName = imageName || casterName+'.png';//actual name of the image
+		faction.addCaster(this);
 
-        /**
-         * Gets this casters image path
-         * @return string path the the casters image
-        */
-        this.getImagePath = function(){
-            return $.wtb.imagePath+'/'+this.faction.name.toLowerCase()+'/'+this.imageName;
-        }
+		/**
+		 * Gets this casters image path
+		 * @return string path the the casters image
+		*/
+		this.getImagePath = function(){
+		    return $.wtb.imagePath+'/'+this.faction.name.toLowerCase()+'/'+this.imageName;
+		}
 
-        /**
-         * Creates a jquery object for a dom element image
-         * @return $(DOM) image of caster
-        */
-        this.getImage = function(){
-            var image = $('<img src="'+this.getImagePath()+'">');
-            return image;
-        }
-        /**
-         * Claims the caster for a player
-         * @param Player player person claiming this caster
-         * @return void
-         */
-         this.claim = function(player){
-             this.faction.claimCaster(this, player);
-         }
-         /**
-          * release the claim on this caster
-          * @return void
-          */
-          this.release = function(){
-          	this.faction.releaseCaster(this);
-          }
+		/**
+		 * Creates a jquery object for a dom element image
+		 * @return $(DOM) image of caster
+		*/
+		this.getImage = function(){
+		    var image = $('<img src="'+this.getImagePath()+'">');
+		    return image;
+		}
+		/**
+		 * Claims the caster for a player
+		 * @param Player player person claiming this caster
+		 * @return void
+		 */
+		 this.claim = function(player){
+		     this.faction.claimCaster(this, player);
+		 }
+		 /**
+		  * release the claim on this caster
+		  * @return void
+		  */
+		  this.release = function(){
+			this.faction.releaseCaster(this);
+		  }
     }
 
 	/**
@@ -720,8 +735,8 @@
 				caster.claim(player);
 				$.wtb.populateFactionRoulette(caster.faction);
                 $.wtb.buildNamePlates();
-                dialog.close();
-                dialog.destroy();
+		dialog.dialog('close');
+		dialog.dialog('destroy');
                 dialog.remove();
 	        });
 
@@ -797,6 +812,56 @@
 	        keyframes.appendRule("100% { -webkit-transform: rotateX("+angle+"deg); }");
 	    }
 
+
+
+	/**
+        * builds and displays the dialog to allow a player to double cross
+        * @param Player() player who is crossing
+        */
+        $.wtb.selectDoubleCross = function(player){
+            var dialog = $('<div id="wtb-double-cross-picker-dialog">')
+
+			var form = $('<form name="ChooseAPlayerToDoubleCross">');
+			form.append('<input type="HIDDEN" name="wtb-crosser-name" value="'+player.name+'">');
+
+			form.append('<div style="width:120px;text-align:right">Player:&nbsp;</div>');
+			var playerSelect = $('<select style="margin-left:120px" name="wtb-crossee-name">');
+			for( var i in $.wtb.players ){
+				var crossee = $.wtb.players[i];
+				if(player.name == crossee.name){
+					continue;
+				}
+				var option = $('<option value="'+crossee.name+'">'+crossee.name+'</option>');
+				playerSelect.append(option);
+			}
+			form.append(playerSelect);
+
+			var submit = $("<input type='submit' name='wtb-select' value='Select'>");
+			form.append('<BR><BR>');
+			submit.css('margin-left','120px');
+			form.append(submit);
+			form.submit(function( event ) {
+			        event.preventDefault();
+				crosserName = $(this).find('input[name="wtb-crosser-name"]').val();
+				crosseeName = $(this).find('select[name="wtb-crossee-name"]').val();
+				var crosser = $.wtb.getPlayer( crosserName );
+				var crossee = $.wtb.getPlayer( crosseeName );
+				$.wtb.doubleCross( crosser, crossee );
+		                $.wtb.buildNamePlates();
+				dialog.dialog('close');
+				dialog.dialog('destroy');
+		                dialog.remove();
+	        	});
+
+	        dialog.append(form);
+	        dialog.dialog({
+	            modal:true,
+	            draggable:false,
+	            resizable:true,
+	            title:"DOUBLE CROSS!!!",
+	            width:800
+	        });
+        }
 
 	/*
 	 * initializes the wtb plugin, pulls the target, sets up casters
