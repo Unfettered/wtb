@@ -1,6 +1,59 @@
 /*
    License: none (public domain)
 */
+.wtb-player-tag-container{
+	width: 1350px;
+	position:relative;
+}
+.wtb-player-nameplate {
+	float:left;
+	margin:10px;
+	-webkit-box-shadow: 0px 3px 5px 6px #ccc;
+	border-radius:10px;
+	max-width: 450px;
+	padding: 5px 5px 20px 5px;
+	display: block;
+	border-style:solid;
+	border-width:5px;
+	height:100px;
+	width:400px;
+	position:relative;
+}
+.wtb-player-nameplate .faction-icon {
+	vertical-align:center;
+	width:100;
+	height:100%;
+	position:relative;
+	float:left;
+}
+.faction-icon img{
+	height:80px
+}
+.wtb-player-nameplate .name-plate-names{
+	padding-left:5px;
+	font-size:1.2em;
+	font-weight:bold;
+	position:relative;
+	float:left;
+	width:250px;
+	height:100%;
+}
+.wtb-player-nameplate .name-plate-names img{
+	position:absolute;
+	top:40px;
+	right:0px;
+	z-index:5px;
+	height:70px;
+}
+.wtb-player-nameplate .icons-name-plate {
+	position:relative;
+	float:right;
+	width:50px;
+	height:100%;
+}
+.wtb-player-nameplate .icons-name-plate img{
+	height: 20px;
+}
 .cygnar{
 
 }
@@ -14,7 +67,9 @@
 
 }
 .retribution{
-
+	background-color:#7acfd9;
+	border-color:#fffcfd;
+	color:#808f65;
 }
 .mercenaries{
 
