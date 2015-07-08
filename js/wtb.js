@@ -445,7 +445,7 @@
 		for (var i in factions) {
 			var faction = factions[i];
 			var panel = $('<div class="wtb-panel">');
-			panel.addClass(faction.name);
+			panel.addClass(faction.name.toLowerCase());
 			panel.append(faction.getLogo());
 			header.append(panel);
 		}

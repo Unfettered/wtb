@@ -188,13 +188,30 @@ padding-top: 1px;
 	border-color:#2d453d;
 
 }
+.bankrupt{
+	background-color:none;
+	border-color:white;
+}
+.jackpot{
+	background: -webkit-linear-gradient(top, 
+                rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%, 
+                rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%, 
+                rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
+	-webkit-border-image: -webkit-linear-gradient(top, 
+                rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%, 
+                rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%, 
+                rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
+}
 
 .wtb-panel{
-	height:80px;
-	width:80px;
-	padding:5px;
+	height:75px;
+	width:75px;
 	float:left;
 	position:relative;
+	 border-style:solid;
+        border-width:5px;
+	margin:2.5px;
+
 }
 .wtb-panel-highlight{
 	height:80px;
@@ -229,8 +246,6 @@ padding-top: 1px;
 	position: absolute;
 	width: 88px;
 	height: 88px;
-	color: rgba(0,0,0,0.9);
-	background-color:rgba(0, 0, 0, 0.2);
 	text-align:center;
 }
 .wtb-caster-container img{
@@ -271,7 +286,7 @@ padding-top: 1px;
 	-moz-box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
 	box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
 	background-color: #000;
-	opacity:0.2;
+	opacity:0.3;
 	z-index:10;
 	left:1257px;
 	top:200px;
