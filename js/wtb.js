@@ -734,18 +734,54 @@
         * @param Player() player object spinning
 	    */
 		$.wtb.confirmCasterSelection = function(caster, player){
-			var r = confirm(player.name +' pulled ' + caster.name);
-			if(r){
-				if(caster.faction.name == 'Jackpot'){
-					$.wtb.resolveJackpot(caster, player);
-				}else{
-					caster.claim(player);
-				}
-				$.wtb.populateFactionRoulette(caster.faction);
-				$.wtb.buildNamePlates();
-			}else{
-				$.wtb.populateFactionRoulette(caster.faction);
-			}
+
+			var dialog = $('<div class="wtb-award-box">');
+			var logo = caster.faction.getLogo() ;
+			logo.css('float','left');
+			logo.css('width','120px');
+			dialog.append( logo );
+			dialog.append( 
+				'<div style="margin:5px;width:200px;text-align:center; font-size:1.2em;float:left">' + player.name +
+				'<BR><BR><span style="font-size:0.8em">pulled</span><BR><BR>' + caster.name+'</div>' 
+			);
+			var portrait = caster.getImage();
+			dialog.append( portrait );
+			portrait.css('float','right');
+			portrait.css('width','120px');
+			dialog.dialog({
+	            		modal:true,
+			        draggable:false,
+	        		resizable:false,
+			        title:"Caster Awarded!!!",
+				closeOnEscape: false,
+				open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog || ui).hide(); },
+			        width:500,
+				buttons: [
+    					{
+						text: "Ok",
+      						click: function() {
+							if(caster.faction.name == 'Jackpot'){
+								$.wtb.resolveJackpot(caster, player);
+							}else{
+								caster.claim(player);
+							}
+							$.wtb.populateFactionRoulette(caster.faction);
+							$.wtb.buildNamePlates();
+						        $( this ).dialog( "close" );
+						        $( this ).remove();
+      						}
+					},
+    					{
+						text: "Cancel",
+      						click: function() {
+							$.wtb.populateFactionRoulette(caster.faction);
+						        $( this ).dialog( "close" );
+						        $( this ).remove();
+      						}
+					}
+  					]
+				});
+
 		}
 
 		/**
