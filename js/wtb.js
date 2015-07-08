@@ -18,7 +18,7 @@
 	};
 	//defined z index for the roulette;
 	$.wtb.translateZ='250px';
-
+	$.wtb.rolling = false;
 	/**
 	 * Faction Object Declaration
 	 * @param string factionName The factions's name
@@ -678,6 +678,11 @@
     	* @param Player player player to get a random caster
     	*/
 		$.wtb.assignPlayerARandomCaster = function(player, faction){
+			if($.wtb.rolling){
+				return;
+			}else{
+				$.wtb.rolling = true;
+			}
 			if(!faction){
 				var factions = $.wtb.getAvailableFactions(player.faction.name);
                 		var selection = Math.floor((Math.random() * factions.length));
@@ -769,6 +774,7 @@
 							$.wtb.buildNamePlates();
 						        $( this ).dialog( "close" );
 						        $( this ).remove();
+							$.wtb.rolling = false;
       						}
 					},
     					{
@@ -777,6 +783,7 @@
 							$.wtb.populateFactionRoulette(caster.faction);
 						        $( this ).dialog( "close" );
 						        $( this ).remove();
+							$.wtb.rolling = false;
       						}
 					}
   					]
