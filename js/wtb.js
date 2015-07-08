@@ -570,9 +570,6 @@
           event.preventDefault();
 			if($.wtb.validatePlayerForm(form)){
 				$.wtb.handlePlayerFormSubmit(form);
-				dialog.dialog('close');
-				dialog.dialog('destroy');
-				dialog.remove();
 			}
         });
 
