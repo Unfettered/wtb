@@ -484,36 +484,106 @@
          return factionSelect;
 	}
 
+
+	/**
+    * Creates a menu
+    */
+    $.wtb.buildMenu = function(){
+		var menu = $("<div id='wtb-menu' class='wtb-menu'></div>");
+
+		var addPlayerMenuItem =  $("<img width='90px'  src='/images/add_player.png'>");
+		addPlayerMenuItem.click(function(){
+			$.wtb.buildPlayerForm();
+		});
+		menu.append(addPlayerMenuItem);
+
+		var assignPlayerMenuItem =  $("<img width='90px'  src='/images/assign_player.png'>");
+		assignPlayerMenuItem.click(function(){
+            $.wtb.selectCaster('Assign a Player a Caster');
+        });
+		menu.append(assignPlayerMenuItem);
+
+		var clear = $("<img width='90px'  src='/images/clear.png'>");
+        clear.click(function( event ){
+            event.preventDefault();
+            $.wtb.clearClaimed()
+            $.wtb.buildNamePlates();
+        });
+		menu.append(clear);
+
+		$.wtb.target.append(menu);
+
+
+        var menuIcon = $("<div id='wtb-menu-toggle' class='wtb-menu-toggle'><img height='32px'  src='/images/fav_icon.png'></div>");
+        menuIcon.click(function(){
+                console.log(menu.attr('rendered'));
+                if(menu.attr('rendered')=="true"){
+		            menu.animate({
+	                    width:'0px',
+	                    left:'+=100'
+	                });
+	                $(this).animate({
+                           'margin-right':'-8px',
+                           left:'+=100'
+                    });
+	               menu.attr('rendered',"false");
+               }else{
+                    $('#wtb-menu').animate({
+                        width:'100px',
+                        left:'-=100'
+                    });
+                    $(this).animate({
+                       'margin-right':'0px',
+                       left:'-=100'
+                   });
+                   menu.attr('rendered',"true");
+               }
+        });
+		$.wtb.target.append(menuIcon);
+	}
+
 	/**
     * Creates a form to add new players
     */
     $.wtb.buildPlayerForm = function(){
-        var formContainer = $("<div class='wtb-player-form-container'>");
+		var dialog = $("<div class='wtb-player-form-container'>");
+
         var form = $("<form class='wtb-player-form-container'>");
+
+        form.append('<div style="width:120px;text-align:right">Name:&nbsp;</div>');
         var nameInput = $("<input name='wtb-player-name'>");
+		nameInput.css('margin-left','120px');
+        form.append(nameInput);
+
+        form.append('<div style="width:120px;text-align:right">Faction:&nbsp;</div>');
         var factionSelect = $.wtb.buildFactionSelect(false);
+        factionSelect.css('margin-left','120px');
+        form.append(factionSelect);
+
+		form.append('<BR><BR>');
+
 		var submit = $("<input type='submit' name='wtb-submit' value='Add'>");
-		var clear = $("<input type='submit' name='wtb-clear' value='Clear Claimed Casters'>");
-        form.append('<span>Player Name:</span>');
-		form.append(nameInput);
-		form.append('<span>Faction:</span>');
-		form.append(factionSelect);
+		submit.css('margin-left','120px');
 		form.append(submit);
-		form.append(clear);
-		clear.click(function( event ){
-			event.preventDefault();
-			$.wtb.clearClaimed()
-			$.wtb.buildNamePlates();
-		});
+
 		form.submit(function( event ) {
           event.preventDefault();
 			if($.wtb.validatePlayerForm(form)){
-				$.wtb.handlePlayerFormSubmit(form)
+				$.wtb.handlePlayerFormSubmit(form);
+				dialog.dialog('close');
+				dialog.dialog('destroy');
+				dialog.remove();
 			}
         });
 
-        formContainer.append(form);
-        $.wtb.target.append(formContainer);
+        dialog.append(form);
+        dialog.dialog({
+            modal:true,
+            draggable:false,
+            resizable:true,
+            title:"Add a New Player",
+            width:800
+        });
     }
 
     	/**
@@ -692,7 +762,7 @@
 			}else if(caster.name == 'Double Cross'){
 				player.doubleCrosses++;
 			}else{
-				$.wtb.selectCaster(caster,player);
+				$.wtb.selectCaster(caster.name,player);
 			}
 		}
 
@@ -702,11 +772,18 @@
         * @param Caster() caster object selected
         * @param Player() player object spinning
         */
-        $.wtb.selectCaster = function(caster, player){
+        $.wtb.selectCaster = function(dialogTitle, player){
             var dialog = $('<div id="wtb-caster-picker-dialog">')
 
 			var form = $('<form name="ChooseACaster">');
-			form.append('<input type="HIDDEN" name="wtb-player-name" value="'+player.name+'">');
+			if(player){
+				form.append('<input type="HIDDEN" name="wtb-player-name" value="'+player.name+'">');
+			}else{
+				var playerSelect = $.wtb.buildPlayerSelect();
+				form.append('<div style="width:120px;text-align:right">Player:&nbsp;</div>');
+				playerSelect.css('margin-left','120px');
+				form.append(playerSelect);
+			}
 			var factionSelect = $.wtb.buildFactionSelect(true);
 			form.append('<div style="width:120px;text-align:right">Faction:&nbsp;</div>');
 			factionSelect.css('margin-left','120px');
@@ -735,7 +812,7 @@
 	          event.preventDefault();
 	            factionName = $(this).find('select[name="wtb-player-faction"]').val();
 				casterName = $(this).find('select[name="wtb-caster"]').val();
-				playerName = $(this).find('input[name="wtb-player-name"]').val();
+				playerName = $(this).find('[name="wtb-player-name"]').val();
 				player = $.wtb.getPlayer(playerName);
 				faction = $.wtb.factions[factionName];
 				caster = faction.getCaster(casterName);
@@ -752,7 +829,7 @@
 	            modal:true,
 	            draggable:false,
 	            resizable:true,
-	            title:caster.name,
+	            title:dialogTitle,
 	            width:800
 	        });
         }
@@ -820,6 +897,24 @@
 	    }
 
 
+		/**
+        * builds a player select control
+        * @param player() exclude a player you don't want in the dropdown
+        * @return $(<Select>)
+        */
+	$.wtb.buildPlayerSelect = function(exclude){
+	    exclude = exclude || {};
+		var playerSelect = $('<select style="margin-left:120px" name="wtb-player-name">');
+        for( var i in $.wtb.players ){
+            var crossee = $.wtb.players[i];
+            if(exclude.name == crossee.name){
+                continue;
+            }
+            var option = $('<option value="'+crossee.name+'">'+crossee.name+'</option>');
+            playerSelect.append(option);
+        }
+        return playerSelect
+	}
 
 	/**
         * builds and displays the dialog to allow a player to double cross
@@ -832,16 +927,8 @@
 			form.append('<input type="HIDDEN" name="wtb-crosser-name" value="'+player.name+'">');
 
 			form.append('<div style="width:120px;text-align:right">Player:&nbsp;</div>');
-			var playerSelect = $('<select style="margin-left:120px" name="wtb-crossee-name">');
-			for( var i in $.wtb.players ){
-				var crossee = $.wtb.players[i];
-				if(player.name == crossee.name){
-					continue;
-				}
-				var option = $('<option value="'+crossee.name+'">'+crossee.name+'</option>');
-				playerSelect.append(option);
-			}
-			form.append(playerSelect);
+
+			form.append($.wtb.buildPlayerSelect(player));
 
 			var submit = $("<input type='submit' name='wtb-select' value='Select'>");
 			form.append('<BR><BR>');
@@ -850,7 +937,7 @@
 			form.submit(function( event ) {
 			        event.preventDefault();
 				crosserName = $(this).find('input[name="wtb-crosser-name"]').val();
-				crosseeName = $(this).find('select[name="wtb-crossee-name"]').val();
+				crosseeName = $(this).find('select[name="wtb-player-name"]').val();
 				var crosser = $.wtb.getPlayer( crosserName );
 				var crossee = $.wtb.getPlayer( crosseeName );
 				$.wtb.doubleCross( crosser, crossee );
@@ -1063,7 +1150,7 @@
 	    $.wtb.addCaster("Double Cross","Jackpot");
 		$.wtb.buildFactionHeader();
 		$.wtb.buildRouletteContainer();
-		$.wtb.buildPlayerForm();
+		$.wtb.buildMenu();
 		$.wtb.buildTagArea();
 	};
 

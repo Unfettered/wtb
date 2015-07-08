@@ -95,8 +95,8 @@ padding-top: 1px;
 	position:relative;
 }
 .wtb-player-nameplate .faction-icon {
-	vertical-align:center;
-	width:100;
+	vertical-align:central;
+	width:85px;
 	height:100%;
 	position:relative;
 	float:left;
@@ -257,4 +257,46 @@ padding-top: 1px;
 	-webkit-animation-iteration-count : 1;
 	-webkit-animation-duration : 4s;
 	-webkit-animation-direction : normal;
+}
+.wtb-menu-toggle{
+	border-right:none;
+	border-left:1px solid;
+	border-top:1px solid;
+	border-bottom:1px solid;
+	border-radius:2px;
+	margin-right: -8px;
+	width:32px;
+	margin-bottom: 5px;
+	-webkit-box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	background-color: #000;
+	opacity:0.2;
+	z-index:10;
+	left:1257px;
+	top:200px;
+	position:absolute;
+
+}
+.wtb-menu{
+	border-right:none;
+	border-left:1px solid;
+	border-top:1px solid;
+	border-bottom:1px solid;
+	border-radius:2x;
+	width:0px;
+	margin-right: -8px;
+	margin-bottom: 5px;
+	-webkit-box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
+	background-color: #000;
+	z-index:10;
+	left:1291px;
+	top:200px;
+	position:absolute;
+	overflow:hidden;
+}
+.wtb-menu-toggle:hover{
+	opacity:1;
 }
