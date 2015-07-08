@@ -550,20 +550,20 @@
 
         var form = $("<form class='wtb-player-form-container'>");
 
-        form.append('<div style="width:120px;text-align:right">Name:&nbsp;</div>');
+        form.append('<div style="width:60px;text-align:right">Name:&nbsp;</div>');
         var nameInput = $("<input name='wtb-player-name'>");
-		nameInput.css('margin-left','120px');
+		nameInput.css('margin-left','60px');
         form.append(nameInput);
 
-        form.append('<div style="width:120px;text-align:right">Faction:&nbsp;</div>');
+        form.append('<div style="width:60px;text-align:right">Faction:&nbsp;</div>');
         var factionSelect = $.wtb.buildFactionSelect(false);
-        factionSelect.css('margin-left','120px');
+        factionSelect.css('margin-left','60px');
         form.append(factionSelect);
 
 		form.append('<BR><BR>');
 
 		var submit = $("<input type='submit' name='wtb-submit' value='Add'>");
-		submit.css('margin-left','120px');
+		submit.css('margin-left','60px');
 		form.append(submit);
 
 		form.submit(function( event ) {
@@ -582,7 +582,7 @@
             draggable:false,
             resizable:true,
             title:"Add a New Player",
-            width:800
+            width:270
         });
     }
 
