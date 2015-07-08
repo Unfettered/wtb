@@ -1,6 +1,79 @@
 /*
    License: none (public domain)
 */
+body{
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 80%, from(rgb(80, 80, 80)), to(rgb(18, 18, 18)));
+	background-position: 0px 100%;
+background-attachment: fixed;
+background-clip: border-box;
+background-color: rgb(0, 0, 0);
+background-repeat:no-repeat;
+background-origin: padding-box;
+background-size: auto;
+color: rgb(255, 255, 255);
+display: block;
+font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+font-size: 12px;
+font-stretch: normal;
+font-style: normal;
+font-variant: normal;
+font-weight: normal;
+line-height: normal;
+margin-bottom: 0px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+padding-bottom: 1px;
+padding-left: 1px;
+padding-right: 1px;
+padding-top: 1px;
+}
+#wtb-container{
+	width:1250px;
+	background-color: rgb(80, 80, 80);
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 80%, from(rgb(80, 80, 80)), to(rgb(18, 18, 18)));
+	background-position: 0px 100%;
+	background-repeat: repeat-x;
+	border-bottom-color: rgb(81, 81, 81);
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-style: solid;
+	border-bottom-width: 1.60000002384186px;
+	border-image-outset: 0px;
+	border-image-repeat: stretch;
+	border-image-slice: 100%;
+	border-image-source: none;
+	border-image-width: 1;
+	border-left-color: rgb(81, 81, 81);
+	border-left-style: solid;
+	border-left-width: 1.60000002384186px;
+	border-right-color: rgb(81, 81, 81);
+	border-right-style: solid;
+	border-right-width: 1.60000002384186px;
+	border-top-color: rgb(81, 81, 81);
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	border-top-style: solid;
+	border-top-width: 1.60000002384186px;
+	box-shadow: rgba(0, 0, 0, 0.901961) 0px 0px 12px 0px inset;
+	color: rgb(255, 255, 255);
+	display: block;
+	float: left;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: normal;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-right: 8px;
+	margin-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+}
 .wtb-player-tag-container{
 	width: 1350px;
 	position:relative;
@@ -8,7 +81,9 @@
 .wtb-player-nameplate {
 	float:left;
 	margin:10px;
-	-webkit-box-shadow: 0px 3px 5px 6px #ccc;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
 	border-radius:10px;
 	max-width: 450px;
 	padding: 5px 5px 20px 5px;
@@ -36,6 +111,7 @@
 	float:left;
 	width:250px;
 	height:100%;
+	color:black;
 }
 .wtb-player-nameplate .name-plate-names img{
 	position:absolute;
@@ -53,7 +129,7 @@
 }
 .wtb-player-nameplate .icons-name-plate img{
 	height: 20px;
-	-webkit-box-shadow: 1px 1px 2px 0px #777;
+	-webkit-box-shadow: 1px 1px 2px 0px #222;
 }
 .cygnar{
 	background-color:#114b9a;
@@ -181,7 +257,4 @@
 	-webkit-animation-iteration-count : 1;
 	-webkit-animation-duration : 4s;
 	-webkit-animation-direction : normal;
-}
-#wtb-container{
-	width:1250px;
 }
