@@ -361,6 +361,9 @@
     	* @param player() crossee the player being double crossed
     	*/
 	$.wtb.doubleCross= function(crosser, crossee){
+		if($.wtb.rolling){
+                	return;
+                }
 		var temp = crosser.caster;
 		if( crosser.doubleCrosses < 1){
 			throw "The double crosser has no double crosses to spend.";
@@ -421,6 +424,9 @@
 	* clears all references to claimed casters
 	*/
 	$.wtb.clearClaimed = function (caster, player){
+		if($.wtb.rolling){
+                	return;
+                }
 		for (var factionName in $.wtb.factions) {
 			faction = $.wtb.factions[factionName];
             var casters = faction.casters;
@@ -546,6 +552,9 @@
     * Creates a form to add new players
     */
     $.wtb.buildPlayerForm = function(){
+		if($.wtb.rolling){
+                	return;
+                }
 		var dialog = $("<div class='wtb-player-form-container'>");
 
         var form = $("<form class='wtb-player-form-container'>");
@@ -813,6 +822,9 @@
         * @param Player() player object spinning
         */
         $.wtb.selectCaster = function(dialogTitle, player){
+		if($.wtb.rolling){
+                	return;
+                }
             var dialog = $('<div id="wtb-caster-picker-dialog">')
 
 			var form = $('<form name="ChooseACaster">');
