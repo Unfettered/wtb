@@ -15,30 +15,8 @@
 	<script>
 		$(document).ready(function(){
 			$('#wtb-container').wtb();
-  /*
-    		addTip = function (tip, userOptions){
-				var baseOptions = {
-					position: 'left',
-					close: 'true',
-					title: 'Help',
-					hideOn: false,
-					hideOnClickOutside: true,
-					showOn:'click'
-				};
-    		    var options = $.extend( {}, baseOptions, userOptions );
-    		    Tipped.delegate(
-					"#wtb-help",
-					 tip,
-					options
-			);
-    		}
-			addTip("Options are awesome",{target: $('#wtb-menu-toggle')});
-			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-add-player')});
-			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-assign-player')});
-			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-clear')});
-*/
-
 			$("#wtb-help").click(function(){
+				$.wtb.showTips();
 			});
 		});
 	</script>

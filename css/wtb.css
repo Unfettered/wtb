@@ -334,3 +334,8 @@ body{
 .wtb-menu-toggle:hover{
 	opacity:1;
 }
+
+.wtb-name-plate-double-cross{
+	color:white;
+	text-decoration: none;
+}

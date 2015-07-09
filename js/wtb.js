@@ -64,9 +64,9 @@
                     throw  "This caster doesn't belong to this faction";
                 }
                 if(player.caster){
-			var oldFaction = player.caster.faction;
-			player.caster.release();
-			$.wtb.populateFactionRoulette(oldFaction);
+				var oldFaction = player.caster.faction;
+				player.caster.release();
+				$.wtb.populateFactionRoulette(oldFaction);
                 }
                 this.availableCasterCount--;
                 caster.player = player;
@@ -170,6 +170,8 @@
 					$.wtb.assignPlayerARandomCaster(player);
 				});
 				namePlate.append(rollLink);
+				$.wtb.addTip("Click here to roll for a random caster!",rollLink);
+
 				
 			}
 			tag.append(namePlate);			
@@ -178,6 +180,8 @@
 			var iconPlate = $('<div class="icons-name-plate">');
 			
 			var deleteLink = $('<a class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
+			$.wtb.addTip("Click here to delete this player.",deleteLink);
+
 			deleteLink.click(function(event){
 				event.preventDefault();
 				var player = $.wtb.getPlayer($(this).attr('href'));
@@ -188,29 +192,34 @@
 			iconPlate.append('<BR>');
 
 			
-			var respinText = '<span>'+this.emergencyRespins+' x <img src="/images/jackpot/Emergency Respin.png"></span>'
+			var respinText = '<span class="wtb-name-plate-emergency-respin">'+this.emergencyRespins+' x <img src="/images/jackpot/Emergency Respin.png"></span>'
 			if(this.emergencyRespins < 1){
-				iconPlate.append(respinText);
-                        }else{
-                                var respinLink = $('<a class="wtb-name-plate-emergency-respin" href="'+this.name+'">'+respinText+'</a>');
-                                respinLink.click(function(event){
-                                        event.preventDefault();
+					var span = $(respinText);
+                    $.wtb.addTip("Click here to use an emergency respin",span,{position: { my: "left+15 center", at: "right center" }});
+					iconPlate.append(span);
+             }else{
+                    var respinLink = $('<a class="wtb-name-plate-emergency-respin-link" href="'+this.name+'">'+respinText+'</a>');
+                    respinLink.click(function(event){
+                    event.preventDefault();
 					var player = $.wtb.getPlayer($(this).attr('href'));
 
 					player.emergencyRespins--;
-                                        $.wtb.assignPlayerARandomCaster(player);
-                                });
+                        $.wtb.assignPlayerARandomCaster(player);
+                    });
 				 iconPlate.append(respinLink);
+				 $.wtb.addTip("Click here to use an emergency respin.",respinLink,{position: { my: "left+15 center", at: "right center" }});
 			}
 			iconPlate.append('<BR>');
 			iconPlate.append('<BR>');
 
 
-			var doubleCrossText = '<span>'+this.doubleCrosses+' x <img src="/images/jackpot/Double Cross.png"></span>'
+			var doubleCrossText = '<span class="wtb-name-plate-double-cross">'+this.doubleCrosses+' x <img src="/images/jackpot/Double Cross.png"></span>'
 			if(this.doubleCrosses < 1){
-                                iconPlate.append( doubleCrossText );
+								var span = $(doubleCrossText);
+								$.wtb.addTip("Click here to double cross a player and switch casters",span,{position: { my: "left+15 center", at: "bottom center" }});
+                                iconPlate.append( span );
                         }else{
-                                var doubleCrossLink = $('<a class="wtb-name-plate-double-cross" href="'+this.name+'">'+  doubleCrossText  +'</a>');
+                                var doubleCrossLink = $('<a class="wtb-name-plate-double-cross-link" href="'+this.name+'">'+  doubleCrossText  +'</a>');
                                 doubleCrossLink.click(function(event){
                                         event.preventDefault();
 					var player = $.wtb.getPlayer($(this).attr('href'));
@@ -218,6 +227,8 @@
                                         $.wtb.selectDoubleCross(player);
                                 });
                                	iconPlate.append(doubleCrossLink);
+                               					 $.wtb.addTip("Click here to double cross a player and switch casters!.",doubleCrossLink,{position: { my: "left+15 center", at: "bottom center" }});
+
                         }
 
 
@@ -551,7 +562,51 @@
                }
         });
 		$.wtb.target.append(menuIcon);
+
+		$.wtb.addTip("Click here to get started!",menuIcon, {disabled:false});
+		$.wtb.addTip("Click here for help.",$("#wtb-help"), {disabled:false});
+        $.wtb.addTip("Add a new player to the tournament.",addPlayerMenuItem);
+        $.wtb.addTip("Assign a player a caster.",assignPlayerMenuItem);
+        $.wtb.addTip("Clear all assigned casters.",clear);
+        menuIcon.tooltip( "open" );
+        $("#wtb-help").tooltip( "open" );
 	}
+
+
+		/**
+        * adds a tool tip to an element
+        * @param string tip the tool tip
+        * @param $(<>) target the item getting the tool tip
+        * @param {} userOptions additional options
+        */
+        $.wtb.addTip = function (tip, target, userOptions ){
+				userOptions  = userOptions || {};
+    			var baseOptions = {
+					position: { my: "right-15 center", at: "left center" },
+					disabled:true,
+				};
+    		    var options = $.extend( {}, baseOptions, userOptions );
+    		    target.attr('title', tip);
+    		    target.tooltip(options);
+			}
+
+			/**
+            * Shows added visable tooltips
+            * @param string tip the tool tip
+            * @param $(<>) target the item getting the tool tip
+            * @param {} userOptions additional options
+            */
+            $.wtb.showTips = function ( ){
+					$('#wtb-menu[rendered="true"] .wtb-add-player').tooltip( "option", "disabled", false ).tooltip("open")
+					$('#wtb-menu[rendered="true"] .wtb-assign-player').tooltip( "option", "disabled", false ).tooltip("open")
+					$('#wtb-menu[rendered="true"] .wtb-clear').tooltip( "option", "disabled", false ).tooltip("open")
+
+					$($('.wtb-name-plate-roll-for-caster')[0]).tooltip( "option", "disabled", false ).tooltip("open")
+					$($('.wtb-name-plate-delete')[0]).tooltip( "option", "disabled", false ).tooltip("open")
+					$($('.wtb-name-plate-double-cross')[0]).tooltip( "option", "disabled", false ).tooltip("open")
+					$($('.wtb-name-plate-emergency-respin')[0]).tooltip( "option", "disabled", false ).tooltip("open")
+
+            }
 
 	/**
     * Creates a form to add new players
