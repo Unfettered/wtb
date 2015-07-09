@@ -526,21 +526,26 @@
                 if(menu.attr('rendered')=="true"){
 		            menu.animate({
 	                    width:'0px',
-	                    left:'+=100'
+	                    left:'+=100',
+						opacity:'0'
+
 	                });
 	                $(this).animate({
                            'margin-right':'-8px',
-                           left:'+=100'
+                           left:'+=100',
+                           opacity:'0.3'
                     });
 	               menu.attr('rendered',"false");
                }else{
                     $('#wtb-menu').animate({
                         width:'100px',
-                        left:'-=100'
+                        left:'-=100',
+                        opacity:'1'
                     });
                     $(this).animate({
                        'margin-right':'0px',
-                       left:'-=100'
+                       left:'-=100',
+                       opacity:'1'
                    });
                    menu.attr('rendered',"true");
                }
@@ -871,8 +876,8 @@
 				caster.claim(player);
 				$.wtb.populateFactionRoulette(caster.faction);
                 $.wtb.buildNamePlates();
-		dialog.dialog('close');
-		dialog.dialog('destroy');
+			dialog.dialog('close');
+			dialog.dialog('destroy');
                 dialog.remove();
 	        });
 
@@ -882,7 +887,7 @@
 	            draggable:false,
 	            resizable:true,
 	            title:dialogTitle,
-	            width:800
+	            width:580
 	        });
         }
 

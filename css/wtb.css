@@ -4,29 +4,29 @@
 body{
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 80%, from(rgb(80, 80, 80)), to(rgb(18, 18, 18)));
 	background-position: 0px 100%;
-background-attachment: fixed;
-background-clip: border-box;
-background-color: rgb(0, 0, 0);
-background-repeat:no-repeat;
-background-origin: padding-box;
-background-size: auto;
-color: rgb(255, 255, 255);
-display: block;
-font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
-font-size: 12px;
-font-stretch: normal;
-font-style: normal;
-font-variant: normal;
-font-weight: normal;
-line-height: normal;
-margin-bottom: 0px;
-margin-left: 0px;
-margin-right: 0px;
-margin-top: 0px;
-padding-bottom: 1px;
-padding-left: 1px;
-padding-right: 1px;
-padding-top: 1px;
+	background-attachment: fixed;
+	background-clip: border-box;
+	background-color: rgb(0, 0, 0);
+	background-repeat:no-repeat;
+	background-origin: padding-box;
+	background-size: auto;
+	color: rgb(255, 255, 255);
+	display: block;
+	font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size: 12px;
+	font-stretch: normal;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: normal;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	padding-bottom: 1px;
+	padding-left: 1px;
+	padding-right: 1px;
+	padding-top: 1px;
 }
 #wtb-container{
 	width:1250px;
@@ -130,6 +130,8 @@ padding-top: 1px;
 .wtb-player-nameplate .icons-name-plate img{
 	height: 20px;
 	-webkit-box-shadow: 1px 1px 2px 0px #222;
+	-moz-box-shadow: 1px 1px 2px 0px #222;
+	box-shadow: 1px 1px 2px 0px #222;
 }
 .cygnar{
 	background-color:#114b9a;
@@ -201,6 +203,10 @@ padding-top: 1px;
                 rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%, 
                 rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%, 
                 rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
+	border-image: -webkit-linear-gradient(top,
+		rgba(213,173,109,1) 0%, rgba(213,173,109,1) 26%,
+		rgba(226,186,120,1) 35%, rgba(163,126,67,1) 45%,
+		rgba(145,112,59,1) 61%, rgba(213,173,109,1) 100%);
 }
 
 .wtb-panel{
@@ -231,6 +237,7 @@ padding-top: 1px;
 }
 .wtb-roulette-container{
 	-webkit-perspective: 0;
+	perspective: 0;
 }
 .wtb-rotate{
 	padding-top: 210px;
@@ -240,6 +247,7 @@ padding-top: 1px;
 	height: 400px;
 	/* Ensure that we're in 3D space */
 	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 }
 
 .wtb-caster-container{
@@ -266,12 +274,22 @@ padding-top: 1px;
 	100%    { -webkit-transform: rotateX(270deg);}
 
 }
+@keyframes x-spin {
+	0%    { transform: rotateX(720deg);}
+	100%    { transform: rotateX(270deg);}
+
+}
 .wtb-spinner {
 	-webkit-animation-name : x-spin;
 	-webkit-animation-timing-function : ease-out;
 	-webkit-animation-iteration-count : 1;
 	-webkit-animation-duration : 4s;
 	-webkit-animation-direction : normal;
+	animation-name : x-spin;
+	animation-timing-function : ease-out;
+	animation-iteration-count : 1;
+	animation-duration : 4s;
+	animation-direction : normal;
 }
 .wtb-menu-toggle{
 	border-right:none;
@@ -287,8 +305,8 @@ padding-top: 1px;
 	box-shadow: -10px 10px 5px 0px rgba(0,0,0,0.75);
 	background-color: #000;
 	opacity:0.3;
-	z-index:10;
-	left:1257px;
+	z-index:11;
+	left:1259px;
 	top:200px;
 	position:absolute;
 
@@ -311,6 +329,7 @@ padding-top: 1px;
 	top:200px;
 	position:absolute;
 	overflow:hidden;
+	opacity: 0;
 }
 .wtb-menu-toggle:hover{
 	opacity:1;
