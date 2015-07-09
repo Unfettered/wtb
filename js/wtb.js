@@ -497,19 +497,19 @@
     $.wtb.buildMenu = function(){
 		var menu = $("<div id='wtb-menu' class='wtb-menu'></div>");
 
-		var addPlayerMenuItem =  $("<img width='90px'  src='/images/add_player.png'>");
+		var addPlayerMenuItem =  $("<img class='wtb-add-player' width='90px'  src='/images/add_player.png'>");
 		addPlayerMenuItem.click(function(){
 			$.wtb.buildPlayerForm();
 		});
 		menu.append(addPlayerMenuItem);
 
-		var assignPlayerMenuItem =  $("<img width='90px'  src='/images/assign_player.png'>");
+		var assignPlayerMenuItem =  $("<img class='wtb-assign-player' width='90px'  src='/images/assign_player.png'>");
 		assignPlayerMenuItem.click(function(){
             $.wtb.selectCaster('Assign a Player a Caster');
         });
 		menu.append(assignPlayerMenuItem);
 
-		var clear = $("<img width='90px'  src='/images/clear.png'>");
+		var clear = $("<img width='90px'  class='wtb-clear' src='/images/clear.png'>");
         clear.click(function( event ){
             event.preventDefault();
             $.wtb.clearClaimed()
@@ -1111,6 +1111,8 @@
         $.wtb.addCaster("Fiona the Black","Mercenaries");
         $.wtb.addCaster("General Ossrum","Mercenaries");
         $.wtb.addCaster("Gorten Grundback","Mercenaries");
+        $.wtb.addCaster("Magnus the Traitor","Mercenaries");
+        $.wtb.addCaster("Magnus the Warlord","Mercenaries");
 		//Convergence
 		$.wtb.addCaster("Aurora, Numen of Aerogenesis","Convergence");
         $.wtb.addCaster("Axis, The Harmonic Enforcer","Convergence");

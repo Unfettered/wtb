@@ -4,24 +4,48 @@
 	<link rel="icon" 
 		type="image/png" 
 		href="/images/fav_icon.jpg">
-    <meta charset="utf-8">
-    <title>Who's The Boss?!?!</title>
-	<link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/js/jquery-ui.css">
-	<link rel="stylesheet" href="/css/wtb.css">
-    <script src="/js/jquery.js"></script>
-	<script src="/js/jquery-ui.js"></script>
-    <script src="/js/wtb.js"></script>
+	<meta charset="utf-8">
+	<title>Who's The Boss?!?!</title>
+		<link rel="stylesheet" href="/css/reset.css">
+    	<link rel="stylesheet" href="/js/jquery-ui.css">
+		<link rel="stylesheet" href="/css/wtb.css">
+    	<script src="/js/jquery.js"></script>
+		<script src="/js/jquery-ui.js"></script>
+    	<script src="/js/wtb.js"></script>
 	<script>
 		$(document).ready(function(){
 			$('#wtb-container').wtb();
-			//var player = $.wtb.addPlayer('Matt', 'Convergence');
-			//$.wtb.assignPlayerARandomCaster(player);
+  /*
+    		addTip = function (tip, userOptions){
+				var baseOptions = {
+					position: 'left',
+					close: 'true',
+					title: 'Help',
+					hideOn: false,
+					hideOnClickOutside: true,
+					showOn:'click'
+				};
+    		    var options = $.extend( {}, baseOptions, userOptions );
+    		    Tipped.delegate(
+					"#wtb-help",
+					 tip,
+					options
+			);
+    		}
+			addTip("Options are awesome",{target: $('#wtb-menu-toggle')});
+			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-add-player')});
+			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-assign-player')});
+			addTip("Options are awesome",{target: $('#wtb-menu[rendered="true"] .wtb-clear')});
+*/
+
+			$("#wtb-help").click(function(){
+			});
 		});
 	</script>
   </head>
   <body>
 	<div id='wtb-container'>
 	</div>
+	<div id='wtb-help' style='color:white; position:fixed; top 5; left 5'>[?]</div>
   </body>
 </html>
