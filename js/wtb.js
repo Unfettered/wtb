@@ -170,7 +170,7 @@
 					$.wtb.assignPlayerARandomCaster(player);
 				});
 				namePlate.append(rollLink);
-				$.wtb.addTip("Click here to roll for a random caster!",rollLink);
+				$.wtb.addTip("Roll for a random caster!",rollLink,{position: { my: "left center", at: "right center+35" }} );
 
 				
 			}
@@ -180,7 +180,7 @@
 			var iconPlate = $('<div class="icons-name-plate">');
 			
 			var deleteLink = $('<a class="wtb-name-plate-delete" href="'+this.name+'">[X]</a>');
-			$.wtb.addTip("Click here to delete this player.",deleteLink);
+			$.wtb.addTip("Click here to delete this player.",deleteLink,{position: { my: "left+15 bottom", at: "right top" }} );
 
 			deleteLink.click(function(event){
 				event.preventDefault();
@@ -190,8 +190,8 @@
 			iconPlate.append(deleteLink);
 			iconPlate.append('<BR>');
 			iconPlate.append('<BR>');
+			iconPlate.append('<BR>');
 
-			
 			var respinText = '<span class="wtb-name-plate-emergency-respin">'+this.emergencyRespins+' x <img src="/images/jackpot/Emergency Respin.png"></span>'
 			if(this.emergencyRespins < 1){
 					var span = $(respinText);
@@ -211,12 +211,12 @@
 			}
 			iconPlate.append('<BR>');
 			iconPlate.append('<BR>');
-
+			iconPlate.append('<BR>');
 
 			var doubleCrossText = '<span class="wtb-name-plate-double-cross">'+this.doubleCrosses+' x <img src="/images/jackpot/Double Cross.png"></span>'
 			if(this.doubleCrosses < 1){
 								var span = $(doubleCrossText);
-								$.wtb.addTip("Click here to double cross a player and switch casters",span,{position: { my: "left+15 center", at: "bottom center" }});
+								$.wtb.addTip("Click here to double cross a player and switch casters",span,{position: { my: "left+15 top", at: "right bottom" }});
                                 iconPlate.append( span );
                         }else{
                                 var doubleCrossLink = $('<a class="wtb-name-plate-double-cross-link" href="'+this.name+'">'+  doubleCrossText  +'</a>');
@@ -227,7 +227,7 @@
                                         $.wtb.selectDoubleCross(player);
                                 });
                                	iconPlate.append(doubleCrossLink);
-                               					 $.wtb.addTip("Click here to double cross a player and switch casters!.",doubleCrossLink,{position: { my: "left+15 center", at: "bottom center" }});
+                               					 $.wtb.addTip("Click here to double cross a player and switch casters!.",doubleCrossLink,{position: { my: "left+15 top", at: "right bottom" }});
 
                         }
 
@@ -533,7 +533,6 @@
 
         var menuIcon = $("<div id='wtb-menu-toggle' class='wtb-menu-toggle'><img height='32px'  src='/images/fav_icon.png'></div>");
         menuIcon.click(function(){
-                console.log(menu.attr('rendered'));
                 if(menu.attr('rendered')=="true"){
 		            menu.animate({
 	                    width:'0px',
@@ -564,7 +563,7 @@
 		$.wtb.target.append(menuIcon);
 
 		$.wtb.addTip("Click here to get started!",menuIcon, {disabled:false});
-		$.wtb.addTip("Click here for help.",$("#wtb-help"), {disabled:false});
+		$.wtb.addTip("Click here for help.",$("#wtb-help"), {disabled:false, position: { my: "left+15 top", at: "right bottom" }});
         $.wtb.addTip("Add a new player to the tournament.",addPlayerMenuItem);
         $.wtb.addTip("Assign a player a caster.",assignPlayerMenuItem);
         $.wtb.addTip("Clear all assigned casters.",clear);
@@ -583,7 +582,13 @@
 				userOptions  = userOptions || {};
     			var baseOptions = {
 					position: { my: "right-15 center", at: "left center" },
-					disabled:true,
+					//disabled:true,
+					open: function( event, ui ) {
+						var element = $(this);
+						setTimeout(function(){	
+							element.tooltip( "close" );
+						}, 3000);
+					}
 				};
     		    var options = $.extend( {}, baseOptions, userOptions );
     		    target.attr('title', tip);
@@ -1262,6 +1267,11 @@
 	    $.wtb.addCaster("Emergency Respin","Jackpot");
 	    $.wtb.addCaster("Player's Choice","Jackpot");
 	    $.wtb.addCaster("Double Cross","Jackpot");
+
+
+
+		var help = $("<div id='wtb-help' style='padding:3px;font-size:1.2em;z-index:20;color:white; position:absolute; top 5; left 5'>[?]</div>");
+		$.wtb.target.append(help);
 		$.wtb.buildFactionHeader();
 		$.wtb.buildRouletteContainer();
 		$.wtb.buildMenu();

@@ -18,12 +18,13 @@
 			$("#wtb-help").click(function(){
 				$.wtb.showTips();
 			});
+			$.wtb.addPlayer('Matthew Morales', $.wtb.getFaction('Khador'));
+			$.wtb.buildNamePlates();
 		});
 	</script>
   </head>
   <body>
 	<div id='wtb-container'>
 	</div>
-	<div id='wtb-help' style='color:white; position:fixed; top 5; left 5'>[?]</div>
   </body>
 </html>

@@ -339,3 +339,13 @@ body{
 	color:white;
 	text-decoration: none;
 }
+#wtb-help{
+	padding:3px;
+	font-size:1.2em;
+	z-index:20;
+	color:white; 
+	position:absolute; 
+	top 5; 
+	left 5;
+	background-color:rgba(0, 0, 0, 0.4);
+}
