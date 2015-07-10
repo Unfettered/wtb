@@ -1201,6 +1201,7 @@
         $.wtb.addCaster("Grayle the Farstrider","Circle");
         $.wtb.addCaster("Kaya the Moonhunter & Laris","Circle");
         $.wtb.addCaster("Kaya the Wildborne","Circle");
+	$.wtb.addCaster("Kromac, Champion of the Wurm","Circle");
         $.wtb.addCaster("Kromac the Ravenous","Circle");
         $.wtb.addCaster("Krueger the Stormlord","Circle");
         $.wtb.addCaster("Krueger the Stormwrath","Circle");
@@ -1232,6 +1233,7 @@
         $.wtb.addCaster("Lylyth, Shadow of Everblight","Legion");
         $.wtb.addCaster("Rhyas, Sigil of Everblight","Legion");
         $.wtb.addCaster("Saeryn, Omen of Everblight","Legion");
+	$.wtb.addCaster("Saeryn & Rhyas, Talons of Everblight","Legion");
         $.wtb.addCaster("Thagrosh the Messiah","Legion");
         $.wtb.addCaster("Thagrosh, Prophet of Everblight","Legion");
         $.wtb.addCaster("Vayl, Consul of Everblight","Legion");
