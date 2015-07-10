@@ -161,7 +161,12 @@
 			namePlate.append('<span>'+this.name+'</span><BR>');
 			if( this.caster ){
 				namePlate.append('<span style="font-weight:bold;text-decoration:underline;margin-top:3px;">Caster:</span><BR>');
-				namePlate.append('<span>'+this.caster.name+'</span>');
+				var casterNameSpan = $('<span>');
+				var casterFactionLogo = this.caster.faction.getLogo();
+				casterFactionLogo.css('height','20px');
+				casterNameSpan.append(casterFactionLogo);
+				casterNameSpan.append('<span>&nbsp;'+this.caster.name+'</span>');
+				namePlate.append(casterNameSpan);
 			}else{
 				var rollLink = $('<a class="wtb-name-plate-roll-for-caster" href="'+this.name+'"><img src="/images/roll.svg"></a>');
 				rollLink.click(function(event){
