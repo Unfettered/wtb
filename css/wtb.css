@@ -336,8 +336,19 @@ body{
 }
 
 .wtb-name-plate-double-cross{
+
+}
+.icons-name-plate a{
 	color:white;
 	text-decoration: none;
+}
+
+.menoth .icons-name-plate a{
+	color:maroon;
+	text-decoration: none;
+}
+.bankrupt .name-plate-names{
+	color:white;
 }
 #wtb-help{
 	padding:3px;
@@ -345,7 +356,6 @@ body{
 	z-index:20;
 	color:white; 
 	position:absolute; 
-	top 5; 
-	left 5;
+
 	background-color:rgba(0, 0, 0, 0.4);
 }

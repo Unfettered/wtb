@@ -602,14 +602,15 @@
             * @param {} userOptions additional options
             */
             $.wtb.showTips = function ( ){
-					$('#wtb-menu[rendered="true"] .wtb-add-player').tooltip( "option", "disabled", false ).tooltip("open")
-					$('#wtb-menu[rendered="true"] .wtb-assign-player').tooltip( "option", "disabled", false ).tooltip("open")
-					$('#wtb-menu[rendered="true"] .wtb-clear').tooltip( "option", "disabled", false ).tooltip("open")
+                    $("#wtb-menu-toggle").tooltip( "open" );
+					$('#wtb-menu[rendered="true"] .wtb-add-player').tooltip("open");
+					$('#wtb-menu[rendered="true"] .wtb-assign-player').tooltip("open");
+					$('#wtb-menu[rendered="true"] .wtb-clear').tooltip("open");
 
-					$($('.wtb-name-plate-roll-for-caster')[0]).tooltip( "option", "disabled", false ).tooltip("open")
-					$($('.wtb-name-plate-delete')[0]).tooltip( "option", "disabled", false ).tooltip("open")
-					$($('.wtb-name-plate-double-cross')[0]).tooltip( "option", "disabled", false ).tooltip("open")
-					$($('.wtb-name-plate-emergency-respin')[0]).tooltip( "option", "disabled", false ).tooltip("open")
+					$($('.wtb-name-plate-roll-for-caster')[0]).tooltip("open");
+					$($('.wtb-name-plate-delete')[0]).tooltip("open");
+					$($('.wtb-name-plate-double-cross')[0]).tooltip("open");
+					$($('.wtb-name-plate-emergency-respin')[0]).tooltip("open");
 
             }
 
@@ -1271,6 +1272,9 @@
 
 
 		var help = $("<div id='wtb-help' style='padding:3px;font-size:1.2em;z-index:20;color:white; position:absolute; top 5; left 5'>[?]</div>");
+		help.click(function(){
+			$.wtb.showTips();
+		});
 		$.wtb.target.append(help);
 		$.wtb.buildFactionHeader();
 		$.wtb.buildRouletteContainer();
