@@ -920,9 +920,13 @@
 			form.append(submit);
 			factionSelect.change(function(event){
 				casterSelect = $(this).parent().find('select[name="wtb-caster"]');
-				faction = $.wtb.factions[$(this).val()];
+                casterSelect.html('');
+                var factionName = $(this).val();
+                if(!factionName){
+                    return;
+                }
+				faction = $.wtb.factions[factionName];
 				casters = faction.getAvailableCasters();
-				casterSelect.html('');
 				for( var i in casters ){
 					var caster = casters[i];
 					var option = $('<option value="'+caster.name+'">'+caster.name+'</option>');
@@ -932,18 +936,27 @@
 			});
 
 			form.submit(function( event ) {
-	          event.preventDefault();
-	            factionName = $(this).find('select[name="wtb-player-faction"]').val();
-				casterName = $(this).find('select[name="wtb-caster"]').val();
-				playerName = $(this).find('[name="wtb-player-name"]').val();
-				player = $.wtb.getPlayer(playerName);
-				faction = $.wtb.factions[factionName];
-				caster = faction.getCaster(casterName);
-				caster.claim(player);
-				$.wtb.populateFactionRoulette(caster.faction);
+                event.preventDefault();
+                factionName = $(this).find('select[name="wtb-player-faction"]').val();
+                casterName = $(this).find('select[name="wtb-caster"]').val();
+                playerName = $(this).find('[name="wtb-player-name"]').val();
+
+                if (!casterName) {
+                    var playerCaster = player.caster;
+                    if (playerCaster) {
+                        playerCaster.release();
+                        $.wtb.populateFactionRoulette(playerCaster.faction);
+                    }
+                }else{
+                    player = $.wtb.getPlayer(playerName);
+                    faction = $.wtb.factions[factionName];
+                    caster = faction.getCaster(casterName);
+                    caster.claim(player);
+                    $.wtb.populateFactionRoulette(caster.faction);
+                }
                 $.wtb.buildNamePlates();
-			dialog.dialog('close');
-			dialog.dialog('destroy');
+			    dialog.dialog('close');
+			    dialog.dialog('destroy');
                 dialog.remove();
 	        });
 
