@@ -939,9 +939,6 @@
 	 * @param Player() player object spinning
 	 */
 	$.wtb.selectCaster = function (dialogTitle, player) {
-		if ($.wtb.rolling) {
-			return;
-		}
 		var dialog = $('<div id="wtb-caster-picker-dialog">')
 
 		var form = $('<form name="ChooseACaster">');
@@ -1059,7 +1056,7 @@
 	 * alters the xspin rule
 	 * @param int angle, where you want the roulette to stop
 	 * @return void
-	 */
+	 *///XXXX
 	$.wtb.changeSpinRule = function (angle) {
 		// find our -webkit-keyframe rule
 		angle = 360 - angle
