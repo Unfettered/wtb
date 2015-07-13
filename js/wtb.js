@@ -364,6 +364,12 @@
 	 * @return Player() player object added
 	 */
 	$.wtb.addPlayer = function (name, faction) {
+		try{
+			var existingPlayer =  $.wtb.getPlayer(name);
+		}catch( error ){}
+		if(existingPlayer){
+			throw "This player has already been added to the tournament.";
+		}
 		var player = new $.wtb.player(name, faction);
 		$.wtb.players.push(player);
 		return player;
@@ -1110,12 +1116,16 @@
 	 * @param player() exclude a player you don't want in the dropdown
 	 * @return $(<Select>)
 	 */
-	$.wtb.buildPlayerSelect = function (exclude) {
+	$.wtb.buildPlayerSelect = function (exclude, hasCaster) {
 		exclude = exclude || {};
+		hasCaster = hasCaster || false;
 		var playerSelect = $('<select style="margin-left:120px" name="wtb-player-name">');
 		for (var i in $.wtb.players) {
 			var crossee = $.wtb.players[i];
 			if (exclude.name == crossee.name) {
+				continue;
+			}
+			if (hasCaster && !crossee.caster) {
 				continue;
 			}
 			var option = $('<option value="' + crossee.name + '">' + crossee.name + '</option>');
@@ -1136,7 +1146,7 @@
 
 		form.append('<div style="width:120px;text-align:right">Player:&nbsp;</div>');
 
-		form.append($.wtb.buildPlayerSelect(player));
+		form.append($.wtb.buildPlayerSelect(player, true));
 
 		var submit = $("<input type='submit' name='wtb-select' value='Select'>");
 		form.append('<BR><BR>');
