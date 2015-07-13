@@ -496,10 +496,17 @@
 		for (var factionName in $.wtb.factions) {
 			faction = $.wtb.factions[factionName];
 			var casters = faction.casters;
+			var claimed = false;
 			for (var casterName in casters) {
-				faction.casters[casterName].release();
+				var caster = faction.casters[casterName];
+				if(caster.player){
+					claimed = true;
+				}
+				caster.release();
 			}
-			$.wtb.populateFactionRoulette(faction);
+			if(claimed) {
+				$.wtb.populateFactionRoulette(faction);
+			}
 		}
 	}
 
@@ -507,6 +514,17 @@
 	 * Creates a header bar with all of the factions logos
 	 */
 	$.wtb.buildFactionHeader = function () {
+		var left = 31.6;
+		var factions = $.wtb.getFactions();
+		for( var i in factions){
+			var channel = $("<div class='"+ factions[i].name.toLowerCase()+ " wtb-channel'>")
+			channel.css('left',left+'px');
+			channel.css('top','20px');
+
+			left += 90;
+			$.wtb.target.append(channel);
+		}
+
 		var factions = $.wtb.getFactions();
 		var header = $("<div class='wtb-header'>");
 		for (var i in factions) {
