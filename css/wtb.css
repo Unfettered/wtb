@@ -244,15 +244,6 @@ body {
 
 }
 
-.wtb-panel-highlight {
-	height: 80px;
-	width: 80px;
-	padding: 5px;
-	float: left;
-	position: relative;
-	background-color: red;
-}
-
 .wtb-panel img {
 	height: 75px;
 	width: 75px;
@@ -272,7 +263,7 @@ body {
 	padding-top: 210px;
 	/* Ensure that we're in 3D space */
 	margin: 0 auto;
-	width: 1350px;
+	width: 1370px;
 	height: 400px;
 	/* Ensure that we're in 3D space */
 	-webkit-transform-style: preserve-3d;
@@ -340,7 +331,7 @@ body {
 	background-color: #000;
 	opacity: 0.3;
 	z-index: 11;
-	left: 1259px;
+	left: 1269px;
 	top: 200px;
 	position: absolute;
 
@@ -360,7 +351,7 @@ body {
 	box-shadow: -10px 10px 5px 0px rgba(0, 0, 0, 0.75);
 	background-color: #000;
 	z-index: 10;
-	left: 1291px;
+	left: 1301px;
 	top: 200px;
 	position: absolute;
 	overflow: hidden;
@@ -406,4 +397,7 @@ body {
 	border-width: 5px;
 	margin: 3px;
 	position:absolute;
+}
+#wtb-container{
+	padding-right:20px;
 }
