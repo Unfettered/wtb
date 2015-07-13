@@ -71,6 +71,7 @@
                 this.availableCasterCount--;
                 caster.player = player;
                 player.caster = caster;
+                $.wtb.populateFactionRoulette(caster.faction);
 	}
 	 /**
             * release a caster from a faction for a player
@@ -147,6 +148,14 @@
 		this.previousCasters = [];
 		this.doubleCrosses = 0;
 		this.emergencyRespins = 0;
+		/*
+		* releases the players caster if he has one
+		*/
+		this.releaseCaster = function(){
+			if(this.caster){
+				this.caster.release();		
+			}
+		}
 		/*
 		* Builds this players name tag
 		*/
@@ -860,10 +869,10 @@
     					{
 						text: "Cancel",
       						click: function() {
-							$.wtb.populateFactionRoulette(caster.faction);
 						        $( this ).dialog( "close" );
 						        $( this ).remove();
 							$.wtb.rolling = false;
+							$.wtb.populateFactionRoulette(caster.faction);
       						}
 					}
   					]
@@ -940,23 +949,19 @@
                 factionName = $(this).find('select[name="wtb-player-faction"]').val();
                 casterName = $(this).find('select[name="wtb-caster"]').val();
                 playerName = $(this).find('[name="wtb-player-name"]').val();
+                player = $.wtb.getPlayer(playerName);
 
+		//XXX
                 if (!casterName) {
-                    var playerCaster = player.caster;
-                    if (playerCaster) {
-                        playerCaster.release();
-                        $.wtb.populateFactionRoulette(playerCaster.faction);
-                    }
+			player.releaseCaster();
                 }else{
-                    player = $.wtb.getPlayer(playerName);
                     faction = $.wtb.factions[factionName];
                     caster = faction.getCaster(casterName);
                     caster.claim(player);
-                    $.wtb.populateFactionRoulette(caster.faction);
                 }
                 $.wtb.buildNamePlates();
-			    dialog.dialog('close');
-			    dialog.dialog('destroy');
+		dialog.dialog('close');
+		dialog.dialog('destroy');
                 dialog.remove();
 	        });
 
