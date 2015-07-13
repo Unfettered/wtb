@@ -985,7 +985,6 @@
 			playerName = $(this).find('[name="wtb-player-name"]').val();
 			player = $.wtb.getPlayer(playerName);
 
-			//XXX
 			if (!casterName) {
 				player.releaseCaster();
 			} else {
