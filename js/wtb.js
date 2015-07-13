@@ -631,9 +631,12 @@
 			//disabled:true,
 			open: function (event, ui) {
 				var element = $(this);
-				setTimeout(function () {
-					element.tooltip("close");
+				var callbackNumber = setTimeout(function () {
+					if($(".Callback_"+callbackNumber).length){
+						element.tooltip("close");
+					}
 				}, 3000);
+				element.addClass("Callback_"+callbackNumber);
 			}
 		};
 		var options = $.extend({}, baseOptions, userOptions);
