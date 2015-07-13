@@ -124,7 +124,7 @@ body {
 	position: absolute;
 	top: 40px;
 	right: 0px;
-	z-index: 5px;
+	z-index: 5;
 	height: 70px;
 }
 
@@ -239,6 +239,7 @@ body {
 	position: relative;
 	border-style: solid;
 	border-width: 5px;
+	border-bottom:none;
 	margin: 2.5px;
 
 }
@@ -282,6 +283,7 @@ body {
 	position: absolute;
 	width: 88px;
 	height: 88px;
+	margin-left:1px;
 	text-align: center;
 }
 
@@ -395,4 +397,13 @@ body {
 	position: absolute;
 
 	background-color: rgba(0, 0, 0, 0.4);
+}
+.wtb-channel{
+	height: 600px;
+	width: 75px;
+	float: left;
+	border-style: solid;
+	border-width: 5px;
+	margin: 3px;
+	position:absolute;
 }

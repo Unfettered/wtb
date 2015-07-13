@@ -499,6 +499,7 @@
 			for (var casterName in casters) {
 				faction.casters[casterName].release();
 			}
+			$.wtb.populateFactionRoulette(faction);
 		}
 	}
 
