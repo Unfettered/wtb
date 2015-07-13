@@ -304,6 +304,19 @@
 		}
 
 		/**
+		 * Returns the ordinal position of this caster in it's factions caster listing
+		 */
+		this.getPosition = function () {
+			var availableCasters = this.faction.getAvailableCasters();
+			for (var i in availableCasters) {
+				if (availableCasters[i] = this) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		/**
 		 * Creates a jquery object for a dom element image
 		 * @return $(DOM) image of caster
 		 */
@@ -332,6 +345,7 @@
 	 * Add a caster to a faction
 	 * @param string casterName name of the caster
 	 * @param string faction name of the caster's faction
+	 * @returns caster() caster added
 	 */
 	$.wtb.addCaster = function (casterName, factionName) {
 		if (!$.wtb.factions[factionName]) {
@@ -340,6 +354,7 @@
 		}
 		var faction = $.wtb.factions[factionName];
 		var caster = new $.wtb.caster(casterName, faction);
+		return caster;
 	}
 
 	/**
@@ -632,11 +647,11 @@
 			open: function (event, ui) {
 				var element = $(this);
 				var callbackNumber = setTimeout(function () {
-					if($(".Callback_"+callbackNumber).length){
+					if ($(".Callback_" + callbackNumber).length) {
 						element.tooltip("close");
 					}
 				}, 3000);
-				element.addClass("Callback_"+callbackNumber);
+				element.addClass("Callback_" + callbackNumber);
 			}
 		};
 		var options = $.extend({}, baseOptions, userOptions);
@@ -853,7 +868,7 @@
 		window.setTimeout(function () {
 			roulette.removeClass('wtb-spinner');
 			roulette.removeClass('wtb-spinning');
-			$.wtb.updateRouletteAngles(faction, caster.position);
+			$.wtb.updateRouletteAngles(faction, caster.getPosition());
 			$.wtb.confirmCasterSelection(caster, player);
 		}, 4000);
 	}
