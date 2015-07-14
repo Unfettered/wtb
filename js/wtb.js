@@ -1244,6 +1244,7 @@
 		$.wtb.addCaster("Goreshade the Cursed", "Cryx");
 		$.wtb.addCaster("Goreshade, Lord of Ruin", "Cryx");
 		$.wtb.addCaster("Lich Lord Asphyxious", "Cryx");
+		$.wtb.addCaster("Lich Lord Terminus", "Cryx");
 		$.wtb.addCaster("Lich Lord Venethrax", "Cryx");
 		$.wtb.addCaster("Lord Exhumator Scaverous", "Cryx");
 		$.wtb.addCaster("Pirate Queen Skarre", "Cryx");
