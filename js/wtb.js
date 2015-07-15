@@ -441,6 +441,9 @@
 		if (crosser.doubleCrosses < 1) {
 			throw "The double crosser has no double crosses to spend.";
 		}
+		if (!crosser.caster) {
+			throw "This player does not have a caster.";
+		}
 		crosser.doubleCrosses--;
 		crosser.caster = crossee.caster;
 		crossee.caster = temp;
