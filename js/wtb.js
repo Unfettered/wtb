@@ -1306,11 +1306,12 @@
 			$.wtb.addCaster("Vladimir, the Dark Champion", "Khador");
 			$.wtb.addCaster("Vladimir, the Dark Prince", "Khador");
 			//Cryx
-			$.wtb.addCaster("Iron Lich Asphyxious", "Cryx");
 			$.wtb.addCaster("Asphyxious the Hellbringer & Vociferon", "Cryx");
+			$.wtb.addCaster("Deneghra, the Soul Weaver", "Cryx");
 			$.wtb.addCaster("Goreshade the Bastard & Deathwalker", "Cryx");
 			$.wtb.addCaster("Goreshade the Cursed", "Cryx");
 			$.wtb.addCaster("Goreshade, Lord of Ruin", "Cryx");
+			$.wtb.addCaster("Iron Lich Asphyxious", "Cryx");
 			$.wtb.addCaster("Lich Lord Asphyxious", "Cryx");
 			$.wtb.addCaster("Lich Lord Terminus", "Cryx");
 			$.wtb.addCaster("Lich Lord Venethrax", "Cryx");
@@ -1347,6 +1348,7 @@
 			$.wtb.addCaster("Aurora, Numen of Aerogenesis", "Convergence");
 			$.wtb.addCaster("Axis, The Harmonic Enforcer", "Convergence");
 			$.wtb.addCaster("Father Lucant, Divinity Architect", "Convergence");
+			$.wtb.addCaster("Forge Master Syntherion", "Convergence");
 			$.wtb.addCaster("Iron Mother Directrix & Exponent Servitors", "Convergence");
 			//Trollbloods
 			$.wtb.addCaster("Borka Kegslayer", "Trollbloods");
