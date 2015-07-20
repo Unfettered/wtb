@@ -181,8 +181,11 @@
 				rollLink.click(function (event) {
 					event.preventDefault();
 					try{
-						var player = $.wtb.getPlayer($(this).attr('href'));
-						$.wtb.assignPlayerARandomCaster(player);
+						var target = $(this);
+						$("html, body").animate({ scrollTop: 0 }, "fast", function(){
+							var player = $.wtb.getPlayer( target.attr('href'));
+							$.wtb.assignPlayerARandomCaster(player);
+						});
 					}catch(e){
 						$.wtb.showError(e);
 					}
