@@ -1339,6 +1339,7 @@
 			$.wtb.addCaster("Captain Bartolo Montador", "Mercenaries");
 			$.wtb.addCaster("Captain Damiano", "Mercenaries");
 			$.wtb.addCaster("Captain Phinneus Shae", "Mercenaries");
+			$.wtb.addCaster("Cognifex Cyphon", "Mercenaries");
 			$.wtb.addCaster("Drake MacBain", "Mercenaries");
 			$.wtb.addCaster("Durgen Madhammer", "Mercenaries");
 			$.wtb.addCaster("Exulon Thexus", "Mercenaries");
