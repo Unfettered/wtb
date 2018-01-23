@@ -8,7 +8,7 @@
 	//The location the widget will be drawn in the dom
 	$.wtb.target = null;
 	//The location the images are stored
-	$.wtb.imagePath = '/images';
+	$.wtb.imagePath = 'images';
 	//Additional Options
 	$.wtb.advancedOptions = {};
 	//player list for the Tourney
@@ -177,7 +177,7 @@
 				casterNameSpan.append('<span>&nbsp;' + this.caster.name + '</span>');
 				namePlate.append(casterNameSpan);
 			} else {
-				var rollLink = $('<a class="wtb-name-plate-roll-for-caster" href="' + this.name + '"><img src="/images/roll.svg"></a>');
+				var rollLink = $('<a class="wtb-name-plate-roll-for-caster" href="' + this.name + '"><img src="images/roll.svg"></a>');
 				rollLink.click(function (event) {
 					event.preventDefault();
 					try{
@@ -227,7 +227,7 @@
 			iconPlate.append('<BR>');
 			iconPlate.append('<BR>');
 
-			var respinText = '<span class="wtb-name-plate-emergency-respin">' + this.emergencyRespins + ' x <img src="/images/jackpot/Emergency Respin.png"></span>'
+			var respinText = '<span class="wtb-name-plate-emergency-respin">' + this.emergencyRespins + ' x <img src="images/jackpot/Emergency Respin.png"></span>'
 			if (this.emergencyRespins < 1) {
 				var span = $(respinText);
 				$.wtb.addTip("Click here to use an emergency respin", span, {
@@ -261,7 +261,7 @@
 			iconPlate.append('<BR>');
 			iconPlate.append('<BR>');
 
-			var doubleCrossText = '<span class="wtb-name-plate-double-cross">' + this.doubleCrosses + ' x <img src="/images/jackpot/Double Cross.png"></span>'
+			var doubleCrossText = '<span class="wtb-name-plate-double-cross">' + this.doubleCrosses + ' x <img src="images/jackpot/Double Cross.png"></span>'
 			if (this.doubleCrosses < 1) {
 				var span = $(doubleCrossText);
 				$.wtb.addTip("Click here to double cross a player and switch casters", span, {
@@ -614,19 +614,19 @@
 	$.wtb.buildMenu = function () {
 		var menu = $("<div id='wtb-menu' class='wtb-menu'></div>");
 
-		var addPlayerMenuItem = $("<img class='wtb-add-player' width='90px'  src='/images/add_player.png'>");
+		var addPlayerMenuItem = $("<img class='wtb-add-player' width='90px'  src='images/add_player.png'>");
 		addPlayerMenuItem.click(function () {
 			$.wtb.buildPlayerForm();
 		});
 		menu.append(addPlayerMenuItem);
 
-		var assignPlayerMenuItem = $("<img class='wtb-assign-player' width='90px'  src='/images/assign_player.png'>");
+		var assignPlayerMenuItem = $("<img class='wtb-assign-player' width='90px'  src='images/assign_player.png'>");
 		assignPlayerMenuItem.click(function () {
 			$.wtb.selectCaster('Assign a Player a Caster');
 		});
 		menu.append(assignPlayerMenuItem);
 
-		var clear = $("<img width='90px'  class='wtb-clear' src='/images/clear.png'>");
+		var clear = $("<img width='90px'  class='wtb-clear' src='images/clear.png'>");
 		clear.click(function (event) {
 			event.preventDefault();
 			try{
@@ -641,7 +641,7 @@
 		$.wtb.target.append(menu);
 
 
-		var menuIcon = $("<div id='wtb-menu-toggle' class='wtb-menu-toggle'><img height='32px'  src='/images/fav_icon.png'></div>");
+		var menuIcon = $("<div id='wtb-menu-toggle' class='wtb-menu-toggle'><img height='32px'  src='images/fav_icon.png'></div>");
 		menuIcon.click(function () {
 			if (menu.attr('rendered') == "true") {
 				menu.animate({
@@ -1258,14 +1258,17 @@
 		try{
 			//Cygnar
 			$.wtb.addCaster("Artificer General Nemo & Storm Chaser Adept Caitlin Finch", "Cygnar");
-			$.wtb.addCaster("Captain Allister Caine", "Cygnar");
+            $.wtb.addCaster("Captain Allison Jakes", "Cygnar");
+            $.wtb.addCaster("Captain Allister Caine", "Cygnar");
 			$.wtb.addCaster("Captain E. Dominic Darius & Halfjacks", "Cygnar");
 			$.wtb.addCaster("Captain Jeremiah Kraye", "Cygnar");
 			$.wtb.addCaster("Captain Kara Sloan", "Cygnar");
 			$.wtb.addCaster("Captain Victoria Haley", "Cygnar");
-			$.wtb.addCaster("Commander Adept Nemo", "Cygnar");
+            $.wtb.addCaster("Colonel Markus 'Siege' Brisbane", "Cygnar");
+            $.wtb.addCaster("Commander Adept Nemo", "Cygnar");
 			$.wtb.addCaster("Commander Coleman Stryker", "Cygnar");
-			$.wtb.addCaster("Constance Blaize, Knight of the Prophet", "Cygnar");
+            $.wtb.addCaster("Commander Dalin Sturgis", "Cygnar");
+            $.wtb.addCaster("Constance Blaize, Knight of the Prophet", "Cygnar");
 			$.wtb.addCaster("General Adept Nemo", "Cygnar");
 			$.wtb.addCaster("Lieutenant Allister Caine", "Cygnar");
 			$.wtb.addCaster("Lord Commander Stryker", "Cygnar");
@@ -1277,6 +1280,7 @@
 			$.wtb.addCaster("Anson Durst, Rock of the Faith", "Menoth");
 			$.wtb.addCaster("Feora, Priestess of the Flame", "Menoth");
 			$.wtb.addCaster("Feora, Protector of the Flame", "Menoth");
+            $.wtb.addCaster("Feora, The Conquering Flame", "Menoth");
 			$.wtb.addCaster("Grand Exemplar Kreoss", "Menoth");
 			$.wtb.addCaster("Grand Scrutator Severius", "Menoth");
 			$.wtb.addCaster("Hierarch Severius", "Menoth");
@@ -1285,18 +1289,21 @@
 			$.wtb.addCaster("High Exemplar Kreoss", "Menoth");
 			$.wtb.addCaster("Intercessor Kreoss", "Menoth");
 			$.wtb.addCaster("Servath Reznik, Wrath of Ages", "Menoth");
-			$.wtb.addCaster("Testament of Menoth", "Menoth");
+            $.wtb.addCaster("Sovereign Tristan Durant", "Menoth");
+            $.wtb.addCaster("Testament of Menoth", "Menoth");
 			$.wtb.addCaster("The Harbinger of Menoth", "Menoth");
 			$.wtb.addCaster("The High Reclaimer", "Menoth");
 			$.wtb.addCaster("Thyra, Flame of Sorrow", "Menoth");
 			$.wtb.addCaster("Vice Scrutator Vindictus", "Menoth");
 			//Khador
+            $.wtb.addCaster("Assault Kommander Strakhov", "Khador");
 			$.wtb.addCaster("Forward Kommander Sorscha Kratikoff", "Khador");
 			$.wtb.addCaster("Karchev the Terrible", "Khador");
 			$.wtb.addCaster("Koldun Kommander Aleksandra Zerkova", "Khador");
 			$.wtb.addCaster("Koldun Kommander Zerkova", "Khador");
 			$.wtb.addCaster("Kommandant Irusk", "Khador");
-			$.wtb.addCaster("Kommander Harkevich", "Khador");
+            $.wtb.addCaster("Kommander Andrei Malakov", "Khador");
+            $.wtb.addCaster("Kommander Harkevich", "Khador");
 			$.wtb.addCaster("Kommander Orsus Zoktavir", "Khador");
 			$.wtb.addCaster("Kommander Sorscha", "Khador");
 			$.wtb.addCaster("Kommander Strakhov", "Khador");
@@ -1310,7 +1317,8 @@
 			$.wtb.addCaster("Vladimir, the Dark Prince", "Khador");
 			//Cryx
 			$.wtb.addCaster("Asphyxious the Hellbringer & Vociferon", "Cryx");
-			$.wtb.addCaster("Deneghra, the Soul Weaver", "Cryx");
+            $.wtb.addCaster("Captain Aiakos", "Cryx");
+            $.wtb.addCaster("Deneghra, the Soul Weaver", "Cryx");
 			$.wtb.addCaster("Goreshade the Bastard & Deathwalker", "Cryx");
 			$.wtb.addCaster("Goreshade the Cursed", "Cryx");
 			$.wtb.addCaster("Goreshade, Lord of Ruin", "Cryx");
@@ -1319,23 +1327,29 @@
 			$.wtb.addCaster("Lich Lord Terminus", "Cryx");
 			$.wtb.addCaster("Lich Lord Venethrax", "Cryx");
 			$.wtb.addCaster("Lord Exhumator Scaverous", "Cryx");
-			$.wtb.addCaster("Pirate Queen Skarre", "Cryx");
+            $.wtb.addCaster("Master Necrotech Mortenebra & Deryliss", "Cryx");
+            $.wtb.addCaster("Mortenebra, Numen of Necrogenesis", "Cryx");
+            $.wtb.addCaster("Pirate Queen Skarre", "Cryx");
 			$.wtb.addCaster("Skarre, Queen of the Broken Coast", "Cryx");
-			$.wtb.addCaster("Warwitch Deneghra", "Cryx");
+            $.wtb.addCaster("Sturgis the Corrupted", "Cryx");
+            $.wtb.addCaster("Warwitch Deneghra", "Cryx");
 			$.wtb.addCaster("Witch Coven of Garlghast & the Egregore", "Cryx");
 			$.wtb.addCaster("Wraith Witch Deneghra", "Cryx");
 			//Retribution
 			$.wtb.addCaster("Adeptis Rahn", "Retribution");
 			$.wtb.addCaster("Dawnlord Vyros", "Retribution");
-			$.wtb.addCaster("Garryth, Blade of Retribution", "Retribution");
+            $.wtb.addCaster("Elara, Death's Shadow", "Retribution");
+            $.wtb.addCaster("Garryth, Blade of Retribution", "Retribution");
 			$.wtb.addCaster("Issyria, Sibyl of Dawn", "Retribution");
 			$.wtb.addCaster("Kaelyssa, Night's Whisper", "Retribution");
 			$.wtb.addCaster("Lord Arcanist Ossyan", "Retribution");
+            $.wtb.addCaster("Lord Ghyrrshyld, the Forgiven", "Retribution");
 			$.wtb.addCaster("Ravyn, Eternal Light", "Retribution");
 			$.wtb.addCaster("Thyron, Sword of Truth", "Retribution");
 			$.wtb.addCaster("Vyros, Incissar of the Dawnguard", "Retribution");
 			//Mercenaries
-			$.wtb.addCaster("Ashlynn D'Elyse", "Mercenaries");
+            $.wtb.addCaster("Ashlynn D'Elyse", "Mercenaries");
+            $.wtb.addCaster("Caine's Hellslingers", "Mercenaries");
 			$.wtb.addCaster("Captain Bartolo Montador", "Mercenaries");
 			$.wtb.addCaster("Captain Damiano", "Mercenaries");
 			$.wtb.addCaster("Captain Phinneus Shae", "Mercenaries");
@@ -1346,11 +1360,13 @@
 			$.wtb.addCaster("Fiona the Black", "Mercenaries");
 			$.wtb.addCaster("General Ossrum", "Mercenaries");
 			$.wtb.addCaster("Gorten Grundback", "Mercenaries");
-			$.wtb.addCaster("Magnus the Traitor", "Mercenaries");
+            $.wtb.addCaster("Lieutenant Crosse, Resistance Fighter", "Mercenaries");
+            $.wtb.addCaster("Magnus the Traitor", "Mercenaries");
 			$.wtb.addCaster("Magnus the Warlord", "Mercenaries");
 			//Convergence
 			$.wtb.addCaster("Aurora, Numen of Aerogenesis", "Convergence");
-			$.wtb.addCaster("Axis, The Harmonic Enforcer", "Convergence");
+            $.wtb.addCaster("Axis, The Harmonic Enforcer", "Convergence");
+            $.wtb.addCaster("Eminent Configurator Orion", "Convergence");
 			$.wtb.addCaster("Father Lucant, Divinity Architect", "Convergence");
 			$.wtb.addCaster("Forge Master Syntherion", "Convergence");
 			$.wtb.addCaster("Iron Mother Directrix & Exponent Servitors", "Convergence");
@@ -1363,11 +1379,15 @@
 			$.wtb.addCaster("Grissel Bloodsong", "Trollbloods");
 			$.wtb.addCaster("Grissel Bloodsong, Marshal of the Kriels", "Trollbloods");
 			$.wtb.addCaster("Hoarluk Doomshaper", "Trollbloods");
+            $.wtb.addCaster("Hoarluk Doomshaper, Dire Prophet", "Trollbloods");
 			$.wtb.addCaster("Hoarluk Doomshaper, Rage of Dhunia", "Trollbloods");
+            $.wtb.addCaster("Horgle the Anvil", "Trollbloods");
 			$.wtb.addCaster("Hunters Grim", "Trollbloods");
 			$.wtb.addCaster("Jarl Skuld, Devil of the Thornwood", "Trollbloods");
+            $.wtb.addCaster("Kolgrima Stonetruth, Winter Witch", "Trollbloods");
 			$.wtb.addCaster("Madrak Ironhide", "Trollbloods");
 			$.wtb.addCaster("Madrak Ironhide, World Ender", "Trollbloods");
+            $.wtb.addCaster("Madrak, Great Chieftan", "Trollbloods");
 			//Circle
 			$.wtb.addCaster("Baldur the Stonecleaver", "Circle");
 			$.wtb.addCaster("Baldur the Stonesoul", "Circle");
@@ -1375,7 +1395,8 @@
 			$.wtb.addCaster("Cassius the Oathkeeper & Wurmwood, Tree of Fate", "Circle");
 			$.wtb.addCaster("Grayle the Farstrider", "Circle");
 			$.wtb.addCaster("Kaya the Moonhunter & Laris", "Circle");
-			$.wtb.addCaster("Kaya the Wildborne", "Circle");
+            $.wtb.addCaster("Kaya the Wildborne", "Circle");
+            $.wtb.addCaster("Kaya the Wildheart", "Circle");
 			$.wtb.addCaster("Kromac, Champion of the Wurm", "Circle");
 			$.wtb.addCaster("Kromac the Ravenous", "Circle");
 			$.wtb.addCaster("Krueger the Stormlord", "Circle");
@@ -1383,15 +1404,19 @@
 			$.wtb.addCaster("Mohsar the Desertwalker", "Circle");
 			$.wtb.addCaster("Morvahna The Autumnblade", "Circle");
 			$.wtb.addCaster("Morvahna the Dawnshadow", "Circle");
+            $.wtb.addCaster("Una the Skyhunter", "Circle");
 			//Skorne
 			$.wtb.addCaster("Master Ascetic Naaresh", "Skorne");
 			$.wtb.addCaster("Archdomina Makeda", "Skorne");
-			$.wtb.addCaster("Dominar Rasheth", "Skorne");
+			$.wtb.addCaster("Dominar Morghoul", "Skorne");
+            $.wtb.addCaster("Dominar Rasheth", "Skorne");
 			$.wtb.addCaster("Lord Arbiter Hexeris", "Skorne");
 			$.wtb.addCaster("Lord Assassin Morghoul", "Skorne");
 			$.wtb.addCaster("Lord Tyrant Hexeris", "Skorne");
+            $.wtb.addCaster("Lord Tyrant Zaadesh", "Skorne");
 			$.wtb.addCaster("Makeda & The Exalted Court", "Skorne");
 			$.wtb.addCaster("Master Tormentor Morghoul", "Skorne");
+            $.wtb.addCaster("Primus Jalaam", "Skorne");
 			$.wtb.addCaster("Supreme Aptimus Zaal & Kovaas", "Skorne");
 			$.wtb.addCaster("Supreme Archdomina Makeda", "Skorne");
 			$.wtb.addCaster("Tyrant Xerxis", "Skorne");
@@ -1402,6 +1427,8 @@
 			$.wtb.addCaster("Absylonia, Daughter of Everblight", "Legion");
 			$.wtb.addCaster("Absylonia, Terror of Everblight", "Legion");
 			$.wtb.addCaster("Bethayne and Belphagor", "Legion");
+            $.wtb.addCaster("Fyanna, Torment of Everblight", "Legion");
+            $.wtb.addCaster("Kallus, Devastation of Everblight", "Legion");
 			$.wtb.addCaster("Kallus, Wrath of Everblight", "Legion");
 			$.wtb.addCaster("Lylyth, Herald of Everblight", "Legion");
 			$.wtb.addCaster("Lylyth, Reckoning of Everblight", "Legion");
@@ -1414,7 +1441,8 @@
 			$.wtb.addCaster("Vayl, Consul of Everblight", "Legion");
 			$.wtb.addCaster("Vayl, Disciple of Everblight", "Legion");
 			//Minions
-			$.wtb.addCaster("Bloody Barnabas", "Minions");
+			$.wtb.addCaster("Barnabas, Lord of Blood", "Minions");
+            $.wtb.addCaster("Bloody Barnabas", "Minions");
 			$.wtb.addCaster("Calaban the Grave Walker", "Minions");
 			$.wtb.addCaster("Dr. Arkadius", "Minions");
 			$.wtb.addCaster("Helga the Conquerer", "Minions");
@@ -1424,6 +1452,13 @@
 			$.wtb.addCaster("Midas", "Minions");
 			$.wtb.addCaster("Rask", "Minions");
 			$.wtb.addCaster("Sturm & Drang", "Minions");
+			//Grymkin
+            $.wtb.addCaster("The Child", "Grymkin");
+            $.wtb.addCaster("The Dreamer", "Grymkin");
+            $.wtb.addCaster("The Heretic", "Grymkin");
+            $.wtb.addCaster("The King of Nothing", "Grymkin");
+            $.wtb.addCaster("The Wanderer", "Grymkin");
+            $.wtb.addCaster("Zevanna Agha, Fate Keeper", "Grymkin");
 			//Bankrupt
 			$.wtb.addCaster("Brun Cragback & Lug", "Bankrupt");
 			$.wtb.addCaster("Dahlia Hallyr & Skarath", "Bankrupt");
