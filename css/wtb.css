@@ -158,7 +158,6 @@ body {
 .khador {
 	background-color: #ee2c24;
 	border-color: black;
-
 }
 
 .cryx {
@@ -210,6 +209,11 @@ body {
 	background-color: #498e85;
 	border-color: #2d453d;
 
+}
+
+.grymkin {
+	background-color: #782f75;
+	border-color: #fffeec;
 }
 
 .bankrupt {

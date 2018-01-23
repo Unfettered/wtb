@@ -1129,8 +1129,8 @@
 			// loop through all the rules
 			for (var j = 0; j < styleSheets[i].cssRules.length; ++j) {
 				// find the -webkit-keyframe rule whose name matches our passed over parameter and return that rule
-				if (styleSheets[i].cssRules[j].type == window.CSSRule.WEBKIT_KEYFRAMES_RULE && styleSheets[i].cssRules[j].name == rule) {
-					return styleSheets[i].cssRules[j];
+                if (styleSheets[i].cssRules[j].name == 'x-spin') {
+                    return styleSheets[i].cssRules[j];
 				}
 			}
 		}
